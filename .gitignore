@@ -1,0 +1,26 @@
+# ---------------------------------------------------------------------
+#  Local environment and secrets - never commit these
+# ---------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+.envSalesTourism
+
+# Runtime / logs
+*.log
+php_errors.log
+error_log
+
+# Local uploads and generated files
+public/uploads/
+database/*.sql.gz
+database/*.dump
+database/*.bak
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~

@@ -1,0 +1,48 @@
+---
+# ----------------------------------------------------------------------
+# cPanel Git deployment for the Michael Tourism Sales System (WebVersion)
+#
+# Server layout (mirrors the local project):
+#
+#   $HOME/michaeltourism/
+#     .env                       <- create manually once (NOT in Git)
+#     .env.example               <- copied from this repo
+#     WebVersion/
+#       app/                     <- private application code
+#       public/                  <- web root
+#       database/                <- schema.sql + seed.sql
+#
+# In cPanel, point the domain/subdomain document root at:
+#   $HOME/michaeltourism/WebVersion/public
+#
+# The real .env is deliberately never copied or overwritten by deployment.
+# ----------------------------------------------------------------------
+deployment:
+  tasks:
+    - export DEPLOYPATH="$HOME/michaeltourism/WebVersion"
+    - export ENVPATH="$HOME/michaeltourism"
+    - export REPOPATH="$PWD"
+
+    # Fail clearly if the repository root is not this WebVersion folder.
+    - /bin/sh -c 'if [ ! -d "$REPOPATH/app" ]; then echo "ERROR - REPOPATH=$REPOPATH does not contain app/. Set REPOPATH in .cpanel.yml."; exit 1; fi'
+
+    - /bin/mkdir -p "$DEPLOYPATH"
+    - /bin/mkdir -p "$DEPLOYPATH/database"
+
+    # Application code and public web root.
+    # If the repository is already checked out at the deploy path, skip the copy.
+    - /bin/sh -c 'if [ "$REPOPATH" != "$DEPLOYPATH" ]; then /bin/cp -R "$REPOPATH/app" "$DEPLOYPATH/"; /bin/cp -R "$REPOPATH/public" "$DEPLOYPATH/"; else echo "Repository is already at the deploy path; app/public are in place."; fi'
+
+    # Database schema and demo seed
+    - /bin/sh -c 'if [ "$REPOPATH" != "$DEPLOYPATH" ]; then /bin/cp "$REPOPATH/database/schema.sql" "$DEPLOYPATH/database/"; /bin/cp "$REPOPATH/database/seed.sql" "$DEPLOYPATH/database/"; fi'
+
+    # Documentation and environment template
+    - /bin/sh -c 'if [ "$REPOPATH" != "$DEPLOYPATH" ]; then /bin/cp "$REPOPATH/README.md" "$DEPLOYPATH/"; fi'
+    - /bin/cp "$REPOPATH/.env.example" "$ENVPATH/.env.example"
+
+    # Permissions: normal files 644, directories 755, real .env 600
+    - /bin/find "$DEPLOYPATH/app" "$DEPLOYPATH/public" "$DEPLOYPATH/database" -type f -exec /bin/chmod 644 {} \;
+    - /bin/find "$DEPLOYPATH/app" "$DEPLOYPATH/public" "$DEPLOYPATH/database" -type d -exec /bin/chmod 755 {} \;
+    - /bin/chmod 644 "$DEPLOYPATH/README.md" 2>/dev/null || true
+    - /bin/chmod 644 "$ENVPATH/.env.example" 2>/dev/null || true
+    - /bin/chmod 600 "$ENVPATH/.env" 2>/dev/null || true
