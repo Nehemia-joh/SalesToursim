@@ -63,13 +63,12 @@ Then open <http://localhost:8000>.
 The Git repository root is this `WebVersion` folder. `.cpanel.yml` deploys:
 
 ```
-$HOME/michaeltourism/
+$HOME/salestourism.nexabie.co.tz/
   .envWebVersion                <- create manually (NOT in Git)
   .envWebVersion.example        <- deployed from the repository
-  WebVersion/
-    app/                       <- private application code
-    public/                    <- domain document root
-    database/
+  app/                          <- private application code
+  public/                       <- subdomain document root
+  database/
 ```
 
 #### 1. Push this folder to GitHub
@@ -100,12 +99,12 @@ If you import only `schema.sql`, run `database/create_admin.sql` next (change th
 Use cPanel **File Manager** (or **Terminal**):
 
 ```bash
-mkdir -p ~/michaeltourism
-cp ~/repositories/YOUR-REPO/.envWebVersion.example ~/michaeltourism/.envWebVersion
-chmod 600 ~/michaeltourism/.envWebVersion
+mkdir -p ~/salestourism.nexabie.co.tz
+cp ~/repositories/YOUR-REPO/.envWebVersion.example ~/salestourism.nexabie.co.tz/.envWebVersion
+chmod 600 ~/salestourism.nexabie.co.tz/.envWebVersion
 ```
 
-Edit `~/michaeltourism/.envWebVersion` and fill in the real values:
+Edit `~/salestourism.nexabie.co.tz/.envWebVersion` and fill in the real values:
 
 ```ini
 APP_TIMEZONE=Africa/Dar_es_Salaam
@@ -118,7 +117,7 @@ DB_PASS=your-real-password
 APP_KEY=replace-with-openssl-rand-hex-32
 ```
 
-The file must sit **one level above** `WebVersion`, not inside the repository.
+The file must sit outside `public/` — in the app folder next to `app/` and `public/`.
 
 #### 4. Connect cPanel to GitHub
 
@@ -136,28 +135,28 @@ After creating the repository:
 2. Click **Update from Remote**.
 3. Click **Deploy HEAD Commit**.
 
-`.cpanel.yml` copies `app/`, `public/`, `database/`, `README.md`, and `.envWebVersion.example` into `~/michaeltourism/WebVersion`.
+`.cpanel.yml` copies `app/`, `public/`, `database/`, `README.md`, and `.envWebVersion.example` into `~/salestourism.nexabie.co.tz`.
 
-#### 5. Point the domain at `public`
+#### 5. Point the subdomain at `public`
 
 cPanel → **Domains** (or **Subdomains**): set the document root to:
 
 ```
-/home/YOUR-CPANEL-USER/michaeltourism/WebVersion/public
+/home/YOUR-CPANEL-USER/salestourism.nexabie.co.tz/public
 ```
 
 If your host does not allow a document root outside `public_html`, place the app under `public_html` and adjust `DEPLOYPATH` in `.cpanel.yml`.
 
 #### 6. First login
 
-Open `https://your-domain.com`.
+Open `https://salestourism.nexabie.co.tz`.
 
 If you imported `seed.sql`, log in with `admin@michaeltourism.com` / `demo1234`, then immediately change the password and delete the demo users. If you imported only `schema.sql`, create the first admin user first.
 
 #### Troubleshooting
 
 - **Deployment fails:** check that `app/` exists at the repository root; `.cpanel.yml` expects the repo root to be `WebVersion`.
-- **500 error:** check `~/michaeltourism/.envWebVersion` and the cPanel PHP error log.
+- **500 error:** check `~/salestourism.nexabie.co.tz/.envWebVersion` and the cPanel PHP error log.
 - **Blank page:** ensure PHP 8.1+ and the `pdo_mysql` extension are enabled.
 - **Wrong folder:** update `DEPLOYPATH` and `ENVPATH` at the top of `.cpanel.yml`.
 

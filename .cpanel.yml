@@ -2,25 +2,27 @@
 # ----------------------------------------------------------------------
 # cPanel Git deployment for the Michael Tourism Sales System (WebVersion)
 #
-# Server layout (mirrors the local project):
+# Server layout:
 #
-#   $HOME/michaeltourism/
+#   $HOME/salestourism.nexabie.co.tz/
 #     .envWebVersion              <- create manually once (NOT in Git)
 #     .envWebVersion.example      <- copied from this repo
-#     WebVersion/
-#       app/                     <- private application code
-#       public/                  <- web root
-#       database/                <- schema.sql + seed.sql
+#     app/                        <- private application code
+#     public/                     <- subdomain document root
+#     database/                   <- schema.sql + seed.sql
 #
-# In cPanel, point the domain/subdomain document root at:
-#   $HOME/michaeltourism/WebVersion/public
+# In cPanel, point the subdomain document root at:
+#   $HOME/salestourism.nexabie.co.tz/public
+#
+# Confirm the exact document root in cPanel -> Domains. If cPanel shows
+# $HOME/public_html/salestourism.nexabie.co.tz, change the two paths below.
 #
 # The real .envWebVersion is deliberately never copied or overwritten by deployment.
 # ----------------------------------------------------------------------
 deployment:
   tasks:
-    - export DEPLOYPATH="$HOME/michaeltourism/WebVersion"
-    - export ENVPATH="$HOME/michaeltourism"
+    - export DEPLOYPATH="$HOME/salestourism.nexabie.co.tz"
+    - export ENVPATH="$HOME/salestourism.nexabie.co.tz"
     - export REPOPATH="$PWD"
 
     # Fail clearly if the repository root is not this WebVersion folder.

@@ -1,24 +1,26 @@
 # =====================================================================
 #  Michael Tourism Sales System - Web Version
-#  Copy this file one level above WebVersion and name it .envWebVersion:
+#  On the server, place this file in the app folder, next to app/ and public/:
 #
-#      michaeltourism/
+#      $HOME/salestourism.nexabie.co.tz/
 #        .envWebVersion
-#        WebVersion/
+#        app/
+#        public/
 #
+#  Locally, place it one level above WebVersion.
 #  Then fill in the real database credentials.
 # =====================================================================
 
 APP_NAME="Michael Tourism Sales"
-APP_URL=https://sales.example.com
+APP_URL=https://salestourism.nexabie.co.tz
 APP_TIMEZONE=Africa/Dar_es_Salaam
 BASE_CURRENCY=USD
 
 # --- Database credentials ---
 DB_HOST=localhost
 DB_PORT=3306
-DB_NAME=michaeltourism
-DB_USER=michaeltourism
+DB_NAME=cpuser_michaeltourism
+DB_USER=cpuser_michaeltourismuser
 DB_PASS=change-me
 DB_CHARSET=utf8mb4
 
