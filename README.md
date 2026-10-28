@@ -93,7 +93,7 @@ git push -u origin main
 4. Open **phpMyAdmin**, select the database, then run/import `database/schema.sql`.
 5. Optional: run/import `database/seed.sql` to load the demo data and demo login.
 
-If you import only `schema.sql`, you must create the first admin user before you can log in.
+If you import only `schema.sql`, run `database/create_admin.sql` next (change the email and password in that file first) so you can log in.
 
 #### 3. Create `.env` on the server
 
