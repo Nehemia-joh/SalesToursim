@@ -33,7 +33,7 @@ function build_modules(): array
     // ============================================================ CLIENTS
     $M['clients'] = [
         'table'   => 'clients',
-        'title'   => 'Client Database',
+        'title'   => 'Client database',
         'prefix'  => 'CLI',
         'ordered' => 'code ASC',
         'select'  => "
@@ -102,7 +102,7 @@ function build_modules(): array
     // ============================================================ INQUIRIES
     $M['inquiries'] = [
         'table'   => 'inquiries',
-        'title'   => 'Inquiry Log',
+        'title'   => 'Inquiry log',
         'prefix'  => 'INQ',
         'ordered' => 't.id DESC',
         'select'  => "
@@ -164,7 +164,7 @@ function build_modules(): array
     // ============================================================ OPPORTUNITIES (Pipeline)
     $M['pipeline'] = [
         'table'   => 'opportunities',
-        'title'   => 'Sales Pipeline',
+        'title'   => 'Sales pipeline',
         'prefix'  => 'OPP',
         'ordered' => 't.id ASC',
         'select'  => "
@@ -221,7 +221,7 @@ function build_modules(): array
     // ============================================================ QUOTATIONS
     $M['quotations'] = [
         'table'   => 'quotations',
-        'title'   => 'Quotation Tracker',
+        'title'   => 'Quotation tracker',
         'prefix'  => 'QT',
         'ordered' => 't.quote_date DESC, t.id DESC',
         'select'  => "
@@ -255,7 +255,7 @@ function build_modules(): array
             ['currency', 'Cur', 'text'],
             ['status', 'Status', 'badge'],
             ['valid_until', 'Valid Until', 'date'],
-            ['flag', 'Flag', 'text'],
+            ['flag', 'Flag', 'flag'],
             ['bk_code', 'Booking', 'code'],
             ['sp_name', 'Prepared By', 'text'],
             ['version', 'Version', 'int'],
@@ -282,7 +282,7 @@ function build_modules(): array
     // ============================================================ FOLLOW-UPS
     $M['followups'] = [
         'table'   => 'follow_ups',
-        'title'   => 'Follow-Up Manager',
+        'title'   => 'Follow-up manager',
         'prefix'  => 'FU',
         'ordered' => 't.status = \'Completed\' ASC, t.due_date ASC, t.id ASC',
         'select'  => "
@@ -416,7 +416,7 @@ function build_modules(): array
     // ============================================================ PAYMENT SCHEDULE
     $M['schedule'] = [
         'table'   => 'payment_schedule',
-        'title'   => 'Payment Schedule',
+        'title'   => 'Payment schedule',
         'prefix'  => 'SCH',
         'ordered' => 't.due_date ASC, t.id ASC',
         'select'  => "
@@ -524,7 +524,7 @@ function build_modules(): array
     // ============================================================ TARGETS
     $M['targets'] = [
         'table'   => 'sales_targets',
-        'title'   => 'Sales Targets',
+        'title'   => 'Sales targets',
         'prefix'  => 'TGT',
         'ordered' => 'year DESC, month DESC, sp_name ASC',
         'select'  => "
@@ -575,7 +575,7 @@ function build_modules(): array
     // ============================================================ ACTIVITIES
     $M['activities'] = [
         'table'   => 'activities',
-        'title'   => 'Activity Log',
+        'title'   => 'Activity log',
         'prefix'  => 'ACT',
         'ordered' => 't.activity_date DESC, t.id DESC',
         'select'  => "
@@ -667,7 +667,7 @@ function build_modules(): array
     // ============================================================ CONTENT LIBRARY
     $M['content_library'] = [
         'table'   => 'content_library',
-        'title'   => 'Content Library',
+        'title'   => 'Content library',
         'prefix'  => 'CNT',
         'ordered' => 't.id DESC',
         'select'  => "
@@ -696,7 +696,7 @@ function build_modules(): array
     // ============================================================ MESSAGE TEMPLATES
     $M['message_templates'] = [
         'table'   => 'message_templates',
-        'title'   => 'Message Templates',
+        'title'   => 'Message templates',
         'prefix'  => 'MSG',
         'ordered' => 't.id DESC',
         'select'  => "
@@ -727,7 +727,7 @@ function build_modules(): array
     // ============================================================ TASK TEMPLATES
     $M['task_templates'] = [
         'table'   => 'task_templates',
-        'title'   => 'Task Templates',
+        'title'   => 'Task templates',
         'prefix'  => 'TSK',
         'ordered' => 't.id DESC',
         'select'  => "

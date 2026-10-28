@@ -1,6 +1,15 @@
-<?php /** crud_form.php - generic add/edit form. */ ?>
+<?php /** crud_form.php - generic add/edit form. */
+$nouns = [
+    'CLI' => 'client', 'INQ' => 'inquiry', 'OPP' => 'opportunity', 'QT' => 'quotation',
+    'FU' => 'follow-up', 'BK' => 'booking', 'SCH' => 'payment milestone', 'PAY' => 'payment',
+    'TGT' => 'sales target', 'ACT' => 'activity', 'TRV' => 'traveler', 'CNT' => 'content block',
+    'MSG' => 'message template', 'TSK' => 'task template',
+];
+$noun = $nouns[$m['prefix']] ?? 'record';
+$heading = $id ? 'Edit ' . $noun . ' (' . code_of($m['prefix'], $id) . ')' : 'New ' . $noun;
+?>
 <div class="topbar">
-  <h1><?= $id ? 'Edit' : 'New' ?> — <?= e($m['title']) ?><?= $id ? ' (' . code_of($m['prefix'], $id) . ')' : '' ?></h1>
+  <h1><?= e($heading) ?></h1>
   <a class="btn ghost" href="index.php?page=<?= e($module) ?>">← Back to list</a>
 </div>
 
@@ -53,14 +62,14 @@
             </select>
           <?php elseif (strpos($type, 'list:') === 0): ?>
             <select name="<?= e($name) ?>"<?= $reqAttr ?>>
-              <option value="">— none —</option>
+              <option value="">None</option>
               <?php foreach (crud_options($type) as $o): ?>
                 <option value="<?= e($o) ?>" <?= (string)$val === $o ? 'selected' : '' ?>><?= e($o) ?></option>
               <?php endforeach; ?>
             </select>
           <?php elseif ($type === 'users'): ?>
             <select name="<?= e($name) ?>"<?= $reqAttr ?>>
-              <option value="">— none —</option>
+              <option value="">None</option>
               <?php foreach (crud_options('users') as $uid => $uname): ?>
                 <option value="<?= (int)$uid ?>" <?= (string)$val === (string)$uid ? 'selected' : '' ?>><?= e($uname) ?></option>
               <?php endforeach; ?>
@@ -70,7 +79,7 @@
               $ropts = crud_options($type);
               // On non-inquiry forms the client is always chosen from the list;
               // only the inquiry form offers inline client creation.
-              if ($type === 'ref:clients' && $module !== 'inquiries') $ropts[null] = '— select client —';
+              if ($type === 'ref:clients' && $module !== 'inquiries') $ropts[null] = 'Select client';
               $inqOwners = [];
               if ($type === 'ref:inquiries') {
                   foreach (DB::all('SELECT id, assigned_to FROM inquiries') as $ir)

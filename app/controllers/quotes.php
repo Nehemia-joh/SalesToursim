@@ -61,7 +61,7 @@ function quote_builder(int $id): void
     $messages      = DB::all("SELECT id, name, channel, subject, body FROM message_templates WHERE active = 1 ORDER BY channel, name");
 
     view('quote_builder', [
-        'title'         => 'Quote Builder — ' . code_of('QT', $id),
+        'title'         => 'Quote builder: ' . code_of('QT', $id),
         'q'             => $q,
         'days'          => $days,
         'items'         => $items,

@@ -3,8 +3,8 @@ $title = 'Reports';
 ?>
 <div class="topbar">
   <div>
-    <h1>Management Reports</h1>
-    <div class="hint">The full Excel report pack · all figures in <?= e($base_cur) ?></div>
+    <h1>Management reports</h1>
+    <div class="hint">The full Excel report pack. All figures in <?= e($base_cur) ?>.</div>
   </div>
   <div class="tools">
     <a class="btn ghost" href="index.php?page=dashboard">← Dashboard</a>
@@ -68,19 +68,19 @@ $title = 'Reports';
 </div>
 
 <div class="card full">
-  <h2>Revenue vs Target by Month</h2>
+  <h2>Revenue vs target by month</h2>
   <div class="legend">
-    <span><i style="background:#0F766E"></i> Actual revenue</span>
-    <span><i style="background:#D8D2C4"></i> Target</span>
+    <span><i style="background:#2E5A4A"></i> Actual revenue</span>
+    <span><i style="background:#C9B98F"></i> Target</span>
   </div>
   <?= svg_grouped_bars($monthly, 'label', [
-      ['key' => 'revenue', 'label' => 'Revenue', 'color' => '#0F766E'],
-      ['key' => 'target',  'label' => 'Target',  'color' => '#D8D2C4'],
+      ['key' => 'revenue', 'label' => 'Revenue', 'color' => '#2E5A4A'],
+      ['key' => 'target',  'label' => 'Target',  'color' => '#C9B98F'],
   ], 1000, 280) ?>
 </div>
 
 <div class="card">
-  <h2>Per Salesperson</h2>
+  <h2>Per salesperson</h2>
   <div class="tablewrap">
   <table class="grid small">
     <thead><tr><th>Rep</th><th class="num">Inq</th><th class="num">Won</th><th class="num">Bookings</th><th class="num">Book Value</th><th class="num">Revenue</th><th class="num">Target</th><th>Achievement</th><th class="num">Wtd Pipe</th></tr></thead>
@@ -97,7 +97,7 @@ $title = 'Reports';
   </table>
   </div>
 
-  <h2>Monthly Detail</h2>
+  <h2>Monthly detail</h2>
   <div class="tablewrap">
   <table class="grid small">
     <thead><tr><th>Month</th><th class="num">Target</th><th class="num">Revenue</th><th>Achievement</th></tr></thead>
@@ -115,7 +115,7 @@ $title = 'Reports';
 
 <div class="two equal">
   <div class="card">
-    <h2>Lead Source Performance</h2>
+    <h2>Lead source performance</h2>
     <div class="tablewrap">
     <table class="grid small">
       <thead><tr><th>Source</th><th class="num">Inquiries</th><th class="num">Won</th><th class="num">Win %</th><th class="num">Wtd Pipeline</th></tr></thead>
@@ -132,7 +132,7 @@ $title = 'Reports';
   </div>
 
   <div class="card">
-    <h2>Lost / Cold Reasons</h2>
+    <h2>Lost / cold reasons</h2>
     <div class="tablewrap">
     <table class="grid small">
       <thead><tr><th>Reason</th><th class="num">Opps</th><th class="num">Value at Risk</th></tr></thead>
@@ -148,7 +148,7 @@ $title = 'Reports';
 </div>
 
 <div class="card">
-  <h2>Upcoming Travel</h2>
+  <h2>Upcoming travel</h2>
   <div class="tablewrap">
   <table class="grid small">
     <thead><tr><th>Ref</th><th>Client</th><th>Tour</th><th>Arrival</th><th class="num">Pax</th><th>Status</th></tr></thead>

@@ -5,7 +5,9 @@ function users_index(): void
 {
     Auth::admin();
     $rows = DB::all('SELECT id, name, email, role, active, created_at FROM users ORDER BY role, name');
-    view('users', compact('rows'));
+    $editId = (int)($_GET['edit'] ?? 0);
+    $u = $editId > 0 ? DB::one('SELECT id, name, email, role, active FROM users WHERE id=?', [$editId]) : null;
+    view('users', compact('rows', 'u'));
 }
 
 function users_save(): void

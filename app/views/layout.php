@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><?= e($title ?? 'Sales Manager') ?> — Michael Tourism</title>
+<title><?= e($title ?? 'Sales desk') ?> - Michael Tourism</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body class="<?= !empty($bare) ? 'bare' : '' ?>">
@@ -14,37 +14,37 @@
 <div class="shell">
   <aside class="side">
     <div class="brand">
-      <span class="mark">MT</span>
-      <div class="brandtext"><b>Michael Tourism</b><span>Sales Manager</span></div>
+      <span class="mark" aria-hidden="true">MT</span>
+      <div class="brandtext"><b>Michael Tourism</b><span>Sales desk, Arusha</span></div>
     </div>
-    <nav>
+    <nav aria-label="Main navigation">
       <a href="index.php?page=dashboard" <?= ($page ?? '') === 'dashboard' ? 'class="on"' : '' ?>>Dashboard</a>
       <?php
         $groups = [
-          'Sales Pipeline' => [
-            ['clients',      'Client Database'],
-            ['inquiries',    'Inquiry Log'],
-            ['pipeline',     'Sales Pipeline'],
+          'Sales pipeline' => [
+            ['clients',      'Client database'],
+            ['inquiries',    'Inquiry log'],
+            ['pipeline',     'Sales pipeline'],
             ['quotations',   'Quotations'],
-            ['followups',    'Follow-Ups'],
-            ['activities',   'Activity Log'],
+            ['followups',    'Follow-ups'],
+            ['activities',   'Activity log'],
           ],
           'Money' => [
             ['bookings',     'Bookings'],
             ['travelers',    'Travelers'],
-            ['schedule',     'Payment Schedule'],
+            ['schedule',     'Payment schedule'],
             ['payments',     'Payments'],
           ],
           'Management' => [
             ['reports',      'Reports'],
-            ['targets',      'Sales Targets'],
+            ['targets',      'Sales targets'],
             ['settings',     'Settings'],
             ['help',         'How to use'],
           ],
           'Library' => [
-            ['content_library',   'Content Library'],
-            ['message_templates', 'Message Templates'],
-            ['task_templates',    'Task Templates'],
+            ['content_library',   'Content library'],
+            ['message_templates', 'Message templates'],
+            ['task_templates',    'Task templates'],
           ],
         ];
         foreach ($groups as $label => $items): ?>
@@ -54,10 +54,19 @@
           <?php endforeach; ?>
         <?php endforeach; ?>
     </nav>
+    <?php $meName = (string)($user['name'] ?? 'Michael Tourism'); ?>
     <div class="me">
-      <div><?= e($user['name'] ?? '') ?> <small>(<?= e($user['role'] ?? '') ?>)</small></div>
-      <a href="index.php?page=users">Users</a>
-      <a href="index.php?page=logout">Sign out</a>
+      <div class="me-row">
+        <span class="avatar" aria-hidden="true"><?= e(strtoupper(substr($meName, 0, 1))) ?></span>
+        <div>
+          <div class="me-name"><?= e($meName) ?></div>
+          <div class="me-role"><?= e($user['role'] ?? '') ?></div>
+        </div>
+      </div>
+      <div class="me-links">
+        <a href="index.php?page=users">Users</a>
+        <a href="index.php?page=logout">Sign out</a>
+      </div>
     </div>
   </aside>
 
@@ -67,7 +76,7 @@
       <?php if (!empty($flashes['err'])): ?><div class="fl bad"><?= e($flashes['err']) ?></div><?php endif; ?>
     </div>
     <?= $content ?>
-    <footer class="foot">Michael Tourism — Sales Management System (web edition) · base currency: <?= e($base_cur) ?></footer>
+    <footer class="foot">Michael Tourism. Sales Management System, web edition. Base currency: <?= e($base_cur) ?>.</footer>
   </main>
 </div>
 <?php endif; ?>

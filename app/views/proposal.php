@@ -18,7 +18,7 @@ $quoteDate  = $q['quote_date'] ? date('d M Y', strtotime($q['quote_date'])) : da
 
   <div class="proposal-toolbar no-print">
     <button type="button" class="btn primary" onclick="window.print()">Print / Save as PDF</button>
-    <span class="hint">Proposal <?= e($quoteCode) ?> · prepared <?= e($quoteDate) ?></span>
+    <span class="hint">Proposal <?= e($quoteCode) ?>. Prepared <?= e($quoteDate) ?>.</span>
   </div>
 
   <?php if ($notice): ?>
@@ -44,9 +44,13 @@ $quoteDate  = $q['quote_date'] ? date('d M Y', strtotime($q['quote_date'])) : da
       <div class="proposal-eyebrow">Prepared exclusively for <?= e($clientName) ?></div>
       <h1><?= e($q['tour'] ?: 'Your Safari Proposal') ?></h1>
       <p class="proposal-sub">
-        <?= e($quoteDate) ?><?= $validUntil ? ' · valid until ' . e($validUntil) : '' ?>
-        <?php if (!empty($q['pax'])): ?> · <?= (int)$q['pax'] ?> traveler<?= (int)$q['pax'] === 1 ? '' : 's' ?><?php endif; ?>
+        <?= e($quoteDate) ?><?= $validUntil ? ', valid until ' . e($validUntil) : '' ?>
+        <?php if (!empty($q['pax'])): ?>, <?= (int)$q['pax'] ?> traveler<?= (int)$q['pax'] === 1 ? '' : 's' ?><?php endif; ?>
       </p>
+    </div>
+
+    <div class="proposal-route" aria-hidden="true">
+      <span></span><i></i><span></span><i></i><span></span><i></i><span></span>
     </div>
   </header>
 

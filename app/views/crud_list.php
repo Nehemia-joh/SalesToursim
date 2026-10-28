@@ -4,7 +4,7 @@
   <div class="tools">
     <form method="get" class="searchform">
       <input type="hidden" name="page" value="<?= e($module) ?>">
-      <input type="search" name="q" value="<?= e($q) ?>" placeholder="Search <?= e($m['title']) ?>...">
+      <input type="search" name="q" value="<?= e($q) ?>" placeholder="Search records...">
       <button class="btn ghost" type="submit">Search</button>
       <?php if ($q !== ''): ?><a class="btn ghost" href="index.php?page=<?= e($module) ?>">Clear</a><?php endif; ?>
     </form>
@@ -58,5 +58,5 @@
     </tbody>
   </table>
   </div>
-  <div class="count"><?= count($rows) ?> record<?= count($rows) === 1 ? '' : 's' ?><?php if (count($m['cols']) > 8): ?> <span class="hint">· scroll sideways to see all columns</span><?php endif; ?></div>
+  <div class="count"><?= count($rows) ?> record<?= count($rows) === 1 ? '' : 's' ?>.<?php if (count($m['cols']) > 8): ?> <span class="hint">Scroll sideways to see all columns.</span><?php endif; ?></div>
 </div>

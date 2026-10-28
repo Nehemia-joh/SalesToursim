@@ -20,19 +20,19 @@ function crud_options(string $type): array
     } elseif (strpos($type, 'ref:') === 0) {
         switch (substr($type, 4)) {
             case 'clients':
-                $opts = [null => '— new client / not set —'];
+                $opts = [null => 'New client / not set'];
                 foreach (DB::all('SELECT id, name FROM clients ORDER BY name') as $r)
                     $opts[$r['id']] = $r['name'];
                 break;
             case 'inquiries':
-                $opts = [null => '— select inquiry —'];
-                foreach (DB::all("SELECT i.id, CONCAT('INQ-',LPAD(i.id,3,'0'),' — ',IFNULL(c.name,'(new client)'),' — ',i.tour) AS label
+                $opts = [null => 'Select inquiry'];
+                foreach (DB::all("SELECT i.id, CONCAT('INQ-',LPAD(i.id,3,'0'),' - ',IFNULL(c.name,'(new client)'),' - ',i.tour) AS label
                                  FROM inquiries i LEFT JOIN clients c ON c.id=i.client_id ORDER BY i.id DESC") as $r)
                     $opts[$r['id']] = $r['label'];
                 break;
             case 'bookings':
-                $opts = [null => '— select booking —'];
-                foreach (DB::all("SELECT b.id, CONCAT('BK-',LPAD(b.id,3,'0'),' — ',IFNULL(c.name,''),' — ',b.tour) AS label
+                $opts = [null => 'Select booking'];
+                foreach (DB::all("SELECT b.id, CONCAT('BK-',LPAD(b.id,3,'0'),' - ',IFNULL(c.name,''),' - ',b.tour) AS label
                                  FROM bookings b LEFT JOIN clients c ON c.id=b.client_id ORDER BY b.id DESC") as $r)
                     $opts[$r['id']] = $r['label'];
                 break;

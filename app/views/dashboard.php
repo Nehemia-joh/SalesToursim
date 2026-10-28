@@ -10,16 +10,16 @@ $openAction = $todos['overdue_fu'] ? 'fu'
 ?>
 <div class="topbar">
   <div>
-    <h1>Sales Dashboard</h1>
-    <div class="hint">Live summary from every worksheet · amounts in <?= e($base_cur) ?></div>
+    <h1>Sales dashboard</h1>
+    <div class="hint">Live summary from every worksheet. Amounts in <?= e($base_cur) ?>.</div>
   </div>
   <div class="tools">
-    <span class="bdg info"><?= date('d M Y') ?></span>
+    <span class="date-stamp"><?= date('d M Y') ?></span>
     <a class="btn primary" href="index.php?page=inquiries&action=form">+ New inquiry</a>
   </div>
 </div>
 
-<div class="flow">
+<div class="flow flow-7">
   <a href="index.php?page=inquiries&action=form"><b>1</b><span>New inquiry</span></a>
   <a href="index.php?page=pipeline&action=form"><b>2</b><span>Pipeline</span></a>
   <a href="index.php?page=quotations&action=form"><b>3</b><span>Quotation</span></a>
@@ -30,26 +30,26 @@ $openAction = $todos['overdue_fu'] ? 'fu'
 </div>
 
 <div class="cards">
-  <div class="kpi"><div class="k">Inquiries</div><div class="v"><?= number_format($kpi['inquiries']) ?></div><div class="s"><?= $kpi['open_leads'] ?> open · <?= $kpi['won'] ?> won · <?= $kpi['lost'] ?> lost</div></div>
-  <div class="kpi"><div class="k">Firm Bookings</div><div class="v"><?= number_format($kpi['firm_bookings']) ?></div><div class="s"><?= $kpi['confirmed_bookings'] ?> confirmed · <?= $kpi['completed_bookings'] ?> completed</div></div>
-  <div class="kpi"><div class="k">Booking Value</div><div class="v"><?= money($kpi['booking_value'], true) ?></div><div class="s"><?= $kpi['all_bookings'] ?> bookings on file</div></div>
-  <div class="kpi"><div class="k">Actual Revenue</div><div class="v"><?= money($kpi['actual_revenue'], true) ?></div><div class="s">gross profit <?= money($kpi['gross_profit'], true) ?> (<?= number_format($kpi['margin_pct'], 1) ?>%)</div></div>
-  <div class="kpi"><div class="k">Cash Received</div><div class="v"><?= money($kpi['payments_received'], true) ?></div><div class="s">outstanding <?= money($kpi['outstanding'], true) ?></div></div>
-  <div class="kpi"><div class="k">Weighted Pipeline</div><div class="v"><?= money_precise($kpi['weighted_pipeline'], true) ?></div><div class="s">open <?= money($kpi['weighted_open'], true) ?> · <?= $kpi['open_pipeline'] ?> opps</div></div>
-  <div class="kpi <?= $kpi['overdue_tasks'] > 0 ? 'alert' : '' ?>"><div class="k">Overdue Follow-ups</div><div class="v"><?= $kpi['overdue_tasks'] ?></div><div class="s">chase these now</div></div>
-  <div class="kpi <?= $kpi['overdue_invoices_n'] > 0 ? 'alert' : '' ?>"><div class="k">Overdue Invoices</div><div class="v"><?= $kpi['overdue_invoices_n'] ?></div><div class="s"><?= money($kpi['overdue_invoices_amt'], true) ?> to collect</div></div>
+  <div class="kpi"><div class="k">Inquiries</div><div class="v"><?= number_format($kpi['inquiries']) ?></div><div class="s"><?= $kpi['open_leads'] ?> open, <?= $kpi['won'] ?> won, <?= $kpi['lost'] ?> lost</div></div>
+  <div class="kpi"><div class="k">Firm bookings</div><div class="v"><?= number_format($kpi['firm_bookings']) ?></div><div class="s"><?= $kpi['confirmed_bookings'] ?> confirmed, <?= $kpi['completed_bookings'] ?> completed</div></div>
+  <div class="kpi"><div class="k">Booking value</div><div class="v"><?= money($kpi['booking_value'], true) ?></div><div class="s"><?= $kpi['all_bookings'] ?> bookings on file</div></div>
+  <div class="kpi"><div class="k">Actual revenue</div><div class="v"><?= money($kpi['actual_revenue'], true) ?></div><div class="s">gross profit <?= money($kpi['gross_profit'], true) ?> (<?= number_format($kpi['margin_pct'], 1) ?>%)</div></div>
+  <div class="kpi"><div class="k">Cash received</div><div class="v"><?= money($kpi['payments_received'], true) ?></div><div class="s">outstanding <?= money($kpi['outstanding'], true) ?></div></div>
+  <div class="kpi"><div class="k">Weighted pipeline</div><div class="v"><?= money_precise($kpi['weighted_pipeline'], true) ?></div><div class="s">open <?= money($kpi['weighted_open'], true) ?>, <?= $kpi['open_pipeline'] ?> opps</div></div>
+  <div class="kpi <?= $kpi['overdue_tasks'] > 0 ? 'alert' : '' ?>"><div class="k">Overdue follow-ups</div><div class="v"><?= $kpi['overdue_tasks'] ?></div><div class="s">chase these now</div></div>
+  <div class="kpi <?= $kpi['overdue_invoices_n'] > 0 ? 'alert' : '' ?>"><div class="k">Overdue invoices</div><div class="v"><?= $kpi['overdue_invoices_n'] ?></div><div class="s"><?= money($kpi['overdue_invoices_amt'], true) ?> to collect</div></div>
   <div class="kpi"><div class="k"><?= date('M') ?> Revenue</div><div class="v"><?= money($kpi['month_revenue'], true) ?></div><div class="s">this month</div></div>
-  <div class="kpi"><div class="k">Avg Booking Value</div><div class="v"><?= money($kpi['avg_booking_value'], true) ?></div><div class="s"><?= number_format($kpi['avg_days_confirm'], 1) ?> days inquiry → booking</div></div>
-  <div class="kpi"><div class="k">Inquiry → Won</div><div class="v"><?= number_format($kpi['win_rate'], 1) ?>%</div><div class="s"><?= $kpi['lost_opps'] ?> lost opportunities</div></div>
-  <div class="kpi"><div class="k">Cash Collection</div><div class="v"><?= number_format($kpi['collection_pct'], 1) ?>%</div><div class="s"><?= $kpi['sched_paid_n'] ?>/<?= $kpi['sched_total_n'] ?> milestones collected</div></div>
+  <div class="kpi"><div class="k">Avg booking value</div><div class="v"><?= money($kpi['avg_booking_value'], true) ?></div><div class="s"><?= number_format($kpi['avg_days_confirm'], 1) ?> days inquiry to booking</div></div>
+  <div class="kpi"><div class="k">Win rate</div><div class="v"><?= number_format($kpi['win_rate'], 1) ?>%</div><div class="s"><?= $kpi['lost_opps'] ?> lost opportunities</div></div>
+  <div class="kpi"><div class="k">Cash collection</div><div class="v"><?= number_format($kpi['collection_pct'], 1) ?>%</div><div class="s"><?= $kpi['sched_paid_n'] ?>/<?= $kpi['sched_total_n'] ?> milestones collected</div></div>
 </div>
 
 <div class="two">
   <div class="card action-center">
-    <h2>Action Center</h2>
+    <h2>Action center</h2>
 
     <details class="acc" name="dash-actions">
-      <summary>Team follow-up load <span class="cnt"><?= array_sum(array_column($owners, 'overdue')) ?> overdue · <?= array_sum(array_column($owners, 'due_week')) ?> this week</span></summary>
+      <summary>Team follow-up load <span class="cnt"><?= array_sum(array_column($owners, 'overdue')) ?> overdue, <?= array_sum(array_column($owners, 'due_week')) ?> this week</span></summary>
       <div class="accbody">
         <div class="tablewrap">
         <table class="grid small">
@@ -74,7 +74,7 @@ $openAction = $todos['overdue_fu'] ? 'fu'
       <summary>Overdue follow-ups <span class="cnt"><?= count($todos['overdue_fu']) ?></span></summary>
       <div class="accbody">
         <div class="tablewrap">
-        <table class="grid small">
+        <table class="grid small action-table">
           <thead><tr><th>ID</th><th>Client</th><th>Action</th><th>Due</th><th>Owner</th></tr></thead>
           <tbody>
           <?php foreach ($todos['overdue_fu'] as $t): ?>
@@ -85,7 +85,7 @@ $openAction = $todos['overdue_fu'] ? 'fu'
           </tbody>
         </table>
         </div>
-        <div class="dash-more"><a href="index.php?page=followups">Open follow-ups →</a></div>
+        <div class="dash-more"><a href="index.php?page=followups">Open follow-ups</a></div>
       </div>
     </details>
 
@@ -93,7 +93,7 @@ $openAction = $todos['overdue_fu'] ? 'fu'
       <summary>Due this week <span class="cnt"><?= count($todos['week_fu']) ?></span></summary>
       <div class="accbody">
         <div class="tablewrap">
-        <table class="grid small">
+        <table class="grid small action-table">
           <thead><tr><th>ID</th><th>Client</th><th>Action</th><th>Due</th><th>Owner</th></tr></thead>
           <tbody>
           <?php foreach ($todos['week_fu'] as $t): ?>
@@ -104,20 +104,20 @@ $openAction = $todos['overdue_fu'] ? 'fu'
           </tbody>
         </table>
         </div>
-        <div class="dash-more"><a href="index.php?page=followups">Open follow-ups →</a></div>
+        <div class="dash-more"><a href="index.php?page=followups">Open follow-ups</a></div>
       </div>
     </details>
 
     <h3>Cash &amp; quote alerts</h3>
     <div class="alerts three">
       <div class="alertbox <?= $kpi['sched_overdue_n'] > 0 ? 'bad' : '' ?>">
-        <b>Overdue milestones</b><span><?= $kpi['sched_overdue_n'] ?> · <?= money($kpi['sched_overdue_amt'], true) ?></span>
+        <b>Overdue milestones</b><span><?= $kpi['sched_overdue_n'] ?> / <?= money($kpi['sched_overdue_amt'], true) ?></span>
       </div>
       <div class="alertbox">
-        <b>Due within 7 days</b><span><?= $kpi['sched_due7d_n'] ?> · <?= money($kpi['sched_due7d_amt'], true) ?></span>
+        <b>Due within 7 days</b><span><?= $kpi['sched_due7d_n'] ?> / <?= money($kpi['sched_due7d_amt'], true) ?></span>
       </div>
       <div class="alertbox">
-        <b>Tentative holds</b><span><?= $kpi['tentative_n'] ?> · <?= money($kpi['tentative_val'], true) ?></span>
+        <b>Tentative holds</b><span><?= $kpi['tentative_n'] ?> / <?= money($kpi['tentative_val'], true) ?></span>
       </div>
       <div class="alertbox <?= $kpi['quotes_expiring'] > 0 ? 'warn' : '' ?>">
         <b>Quotes expiring</b><span><?= $kpi['quotes_expiring'] ?> within 7 days</span>
@@ -126,12 +126,12 @@ $openAction = $todos['overdue_fu'] ? 'fu'
         <b>Awaiting client response</b><span><?= $kpi['quotes_awaiting'] ?> sent / revised proposals</span>
       </div>
       <div class="alertbox">
-        <b>Proposal views (7 days)</b><span><?= $kpi['proposal_views_7d'] ?> views · <?= $kpi['quotes_opened_7d'] ?> proposals opened</span>
+        <b>Proposal views (7 days)</b><span><?= $kpi['proposal_views_7d'] ?> views, <?= $kpi['quotes_opened_7d'] ?> proposals opened</span>
       </div>
     </div>
 
     <details class="acc" name="dash-actions" <?= $openAction === 'pay' ? 'open' : '' ?>>
-      <summary>Payment alarms <span class="cnt">overdue <?= count($todos['overdue_sch']) ?> · due ≤7d <?= count($todos['due_sch']) ?></span></summary>
+      <summary>Payment alarms <span class="cnt">overdue <?= count($todos['overdue_sch']) ?>, due ≤7d <?= count($todos['due_sch']) ?></span></summary>
       <div class="accbody">
         <div class="tablewrap">
         <table class="grid small">
@@ -146,12 +146,12 @@ $openAction = $todos['overdue_fu'] ? 'fu'
           </tbody>
         </table>
         </div>
-        <div class="dash-more"><a href="index.php?page=schedule">Open payment schedule →</a></div>
+        <div class="dash-more"><a href="index.php?page=schedule">Open payment schedule</a></div>
       </div>
     </details>
 
     <details class="acc" name="dash-actions">
-      <summary>Tentative holds <span class="cnt"><?= $kpi['tentative_n'] ?> · <?= money($kpi['tentative_val'], true) ?></span></summary>
+      <summary>Tentative holds <span class="cnt"><?= $kpi['tentative_n'] ?> / <?= money($kpi['tentative_val'], true) ?></span></summary>
       <div class="accbody">
         <div class="tablewrap">
         <table class="grid small">
@@ -165,7 +165,7 @@ $openAction = $todos['overdue_fu'] ? 'fu'
           </tbody>
         </table>
         </div>
-        <div class="dash-more"><a href="index.php?page=bookings">Open bookings →</a></div>
+        <div class="dash-more"><a href="index.php?page=bookings">Open bookings</a></div>
       </div>
     </details>
 
@@ -184,13 +184,13 @@ $openAction = $todos['overdue_fu'] ? 'fu'
           </tbody>
         </table>
         </div>
-        <div class="dash-more"><a href="index.php?page=quotations">Open quotations →</a></div>
+        <div class="dash-more"><a href="index.php?page=quotations">Open quotations</a></div>
       </div>
     </details>
   </div>
 
   <div class="card">
-    <h2>Team Leaderboard</h2>
+    <h2>Team leaderboard</h2>
     <div class="tablewrap">
     <table class="grid small leaderboard">
       <thead><tr><th>#</th><th>Rep</th><th class="num">Inq</th><th class="num">Bkgs</th><th class="num">Revenue</th><th class="num">Target</th><th>Achv.</th><th class="num">Wtd Pipe</th></tr></thead>
@@ -211,7 +211,7 @@ $openAction = $todos['overdue_fu'] ? 'fu'
     </div>
 
     <details class="acc" open>
-      <summary>Sales Funnel</summary>
+      <summary>Sales funnel</summary>
       <div class="accbody">
         <div class="tablewrap">
         <table class="grid small">
@@ -232,7 +232,7 @@ $openAction = $todos['overdue_fu'] ? 'fu'
     </details>
 
     <details class="acc">
-      <summary>Top Clients (firm bookings)</summary>
+      <summary>Top clients (firm bookings)</summary>
       <div class="accbody">
         <div class="tablewrap">
         <table class="grid small">
@@ -253,7 +253,7 @@ $openAction = $todos['overdue_fu'] ? 'fu'
 <div class="card full">
   <div class="topbar" style="margin-bottom:8px">
     <div>
-      <h2 style="margin:0">Running &amp; upcoming tours</h2>
+      <h2 style="margin:0">Running and upcoming tours</h2>
       <p class="hint" style="margin:4px 0 0">Tours on the road now, plus departures in the next 7 days. Showing up to 4 in each list.</p>
     </div>
     <div class="tools">
@@ -266,34 +266,33 @@ $openAction = $todos['overdue_fu'] ? 'fu'
     <div>
       <h3>On tour now (<?= count($todos['running_tours']) ?>)</h3>
       <div class="tablewrap">
-      <table class="grid small">
-        <thead><tr><th>Ref</th><th>Tour</th><th>Client</th><th>Dates</th><th class="num">Pax</th><th class="num">Travelers</th><th>Status</th></tr></thead>
+      <table class="grid small tours-table">
+        <thead><tr><th>Ref</th><th>Tour</th><th>Client</th><th>Dates</th><th class="num">Pax / travelers</th><th>Status</th></tr></thead>
         <tbody>
         <?php foreach (array_slice($todos['running_tours'], 0, 4) as $t): ?>
           <tr>
             <td class="cd"><?= e($t['bk_code']) ?></td>
             <td class="celltext"><?= e($t['tour']) ?></td>
             <td><?= e($t['client_name'] ?? '') ?></td>
-            <td class="dt"><?= e(date('d M', strtotime($t['arrival']))) ?> → <?= e(date('d M Y', strtotime($t['departure']))) ?></td>
-            <td class="num"><?= (int)$t['pax'] ?></td>
-            <td class="num"><?= (int)$t['traveler_count'] ?></td>
+            <td class="dt"><?= e(date('d M', strtotime($t['arrival']))) ?> – <?= e(date('d M Y', strtotime($t['departure']))) ?></td>
+            <td class="num"><?= (int)$t['pax'] ?> / <?= (int)$t['traveler_count'] ?></td>
             <td><?= badge((string)$t['status']) ?></td>
           </tr>
         <?php endforeach; ?>
-        <?php if (!$todos['running_tours']): ?><tr><td colspan="7" class="empty">No tours on the road today.</td></tr><?php endif; ?>
+        <?php if (!$todos['running_tours']): ?><tr><td colspan="6" class="empty">No tours on the road today.</td></tr><?php endif; ?>
         </tbody>
       </table>
       </div>
       <?php if (count($todos['running_tours']) > 4): ?>
-        <div class="dash-more"><a href="index.php?page=bookings">View all <?= count($todos['running_tours']) ?> running tours →</a></div>
+        <div class="dash-more"><a href="index.php?page=bookings">View all <?= count($todos['running_tours']) ?> running tours</a></div>
       <?php endif; ?>
     </div>
 
     <div>
       <h3>Departing in the next 7 days (<?= count($todos['upcoming_tours']) ?>)</h3>
       <div class="tablewrap">
-      <table class="grid small">
-        <thead><tr><th>Ref</th><th>Tour</th><th>Client</th><th>Arrival</th><th class="num">Pax</th><th class="num">Travelers</th><th>Owner</th></tr></thead>
+      <table class="grid small tours-table">
+        <thead><tr><th>Ref</th><th>Tour</th><th>Client</th><th>Arrival</th><th class="num">Pax / travelers</th><th>Owner</th></tr></thead>
         <tbody>
         <?php foreach (array_slice($todos['upcoming_tours'], 0, 4) as $t): ?>
           <tr>
@@ -301,17 +300,16 @@ $openAction = $todos['overdue_fu'] ? 'fu'
             <td class="celltext"><?= e($t['tour']) ?></td>
             <td><?= e($t['client_name'] ?? '') ?></td>
             <td class="dt"><?= e(date('d M', strtotime($t['arrival']))) ?> <span class="hint">(in <?= (int)$t['days_to_arrival'] ?>d)</span></td>
-            <td class="num"><?= (int)$t['pax'] ?></td>
-            <td class="num"><?= (int)$t['traveler_count'] ?></td>
+            <td class="num"><?= (int)$t['pax'] ?> / <?= (int)$t['traveler_count'] ?></td>
             <td><?= e($t['sp_name'] ?? '') ?></td>
           </tr>
         <?php endforeach; ?>
-        <?php if (!$todos['upcoming_tours']): ?><tr><td colspan="7" class="empty">No departures in the next 7 days.</td></tr><?php endif; ?>
+        <?php if (!$todos['upcoming_tours']): ?><tr><td colspan="6" class="empty">No departures in the next 7 days.</td></tr><?php endif; ?>
         </tbody>
       </table>
       </div>
       <?php if (count($todos['upcoming_tours']) > 4): ?>
-        <div class="dash-more"><a href="index.php?page=bookings">View all <?= count($todos['upcoming_tours']) ?> upcoming tours →</a></div>
+        <div class="dash-more"><a href="index.php?page=bookings">View all <?= count($todos['upcoming_tours']) ?> upcoming tours</a></div>
       <?php endif; ?>
     </div>
   </div>
@@ -319,16 +317,16 @@ $openAction = $todos['overdue_fu'] ? 'fu'
 
 <div class="card full">
   <details class="acc">
-    <summary><span class="acc-h">12-Month Revenue vs Target</span> <span class="cnt">click to expand</span></summary>
+    <summary><span class="acc-h">12-month revenue vs target</span> <span class="cnt">click to expand</span></summary>
     <div class="accbody">
       <div class="legend">
-        <span><i style="background:#0F766E"></i> Actual revenue</span>
-        <span><i style="background:#D8D2C4"></i> Target</span>
+        <span><i style="background:#2E5A4A"></i> Actual revenue</span>
+        <span><i style="background:#C9B98F"></i> Target</span>
         <span class="hint">Hover a bar for the exact figure.</span>
       </div>
       <?= svg_grouped_bars($trend, 'label', [
-          ['key' => 'rev',    'label' => 'Revenue', 'color' => '#0F766E'],
-          ['key' => 'target', 'label' => 'Target',  'color' => '#D8D2C4'],
+          ['key' => 'rev',    'label' => 'Revenue', 'color' => '#2E5A4A'],
+          ['key' => 'target', 'label' => 'Target',  'color' => '#C9B98F'],
       ], 1000, 240) ?>
 
       <details class="acc">

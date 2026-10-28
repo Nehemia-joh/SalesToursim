@@ -9,10 +9,9 @@ $categories = ['Accommodation', 'Park fees', 'Transport', 'Activity', 'Meal', 'G
 ?>
 <div class="topbar">
   <div>
-    <h1>Quote Builder — <?= e($quoteCode) ?></h1>
+    <h1>Quote builder: <?= e($quoteCode) ?></h1>
     <div class="hint">
-      <?= e($q['client_name'] ?: 'No client') ?><?= $inqCode ? ' · ' . e($inqCode) : '' ?>
-      · <?= e($q['tour'] ?: 'Untitled proposal') ?>
+      <?= e($q['client_name'] ?: 'No client') ?><?= $inqCode ? ', ' . e($inqCode) : '' ?>, <?= e($q['tour'] ?: 'Untitled proposal') ?>
     </div>
   </div>
   <div class="tools">
@@ -36,7 +35,7 @@ $categories = ['Accommodation', 'Park fees', 'Transport', 'Activity', 'Meal', 'G
 <?php if (!empty($q['client_response'])): ?>
   <div class="fl <?= $q['client_response'] === 'Accepted' ? 'ok' : 'bad' ?>">
     Client response: <b><?= e($q['client_response']) ?></b>
-    <?php if (!empty($q['responded_at'])): ?> · <?= e(date('d M Y H:i', strtotime($q['responded_at']))) ?><?php endif; ?>
+    <?php if (!empty($q['responded_at'])): ?>, <?= e(date('d M Y H:i', strtotime($q['responded_at']))) ?><?php endif; ?>
     <?php if (!empty($q['client_comment'])): ?><br><span class="hint">“<?= e($q['client_comment']) ?>”</span><?php endif; ?>
   </div>
 <?php endif; ?>
@@ -123,9 +122,9 @@ $categories = ['Accommodation', 'Park fees', 'Transport', 'Activity', 'Meal', 'G
     <?php if ($contentBlocks): ?>
       <div class="content-insert">
         <select id="content-select">
-          <option value="">— choose saved content —</option>
+          <option value="">Choose saved content</option>
           <?php foreach ($contentBlocks as $c): ?>
-            <option value="<?= (int)$c['id'] ?>" data-body="<?= e((string)$c['body']) ?>"><?= e($c['title']) ?><?= $c['category'] ? ' · ' . e($c['category']) : '' ?></option>
+            <option value="<?= (int)$c['id'] ?>" data-body="<?= e((string)$c['body']) ?>"><?= e($c['title']) ?><?= $c['category'] ? ' (' . e($c['category']) . ')' : '' ?></option>
           <?php endforeach; ?>
         </select>
         <button type="button" class="btn ghost" data-insert="cover_note">Cover note</button>
@@ -243,11 +242,11 @@ $categories = ['Accommodation', 'Park fees', 'Transport', 'Activity', 'Meal', 'G
   <?php if ($messages): ?>
     <div class="content-insert">
       <select id="message-select">
-        <option value="">— choose a message template —</option>
+        <option value="">Choose a message template</option>
         <?php foreach ($messages as $m): ?>
           <option value="<?= (int)$m['id'] ?>"
                   data-subject="<?= e((string)$m['subject']) ?>"
-                  data-body="<?= e((string)$m['body']) ?>"><?= e($m['name']) ?><?= $m['channel'] ? ' · ' . e($m['channel']) : '' ?></option>
+                  data-body="<?= e((string)$m['body']) ?>"><?= e($m['name']) ?><?= $m['channel'] ? ' (' . e($m['channel']) . ')' : '' ?></option>
         <?php endforeach; ?>
       </select>
       <button type="button" class="btn ghost" id="copy-message">Copy message</button>

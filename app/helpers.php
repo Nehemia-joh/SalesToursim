@@ -162,7 +162,7 @@ function short_money($n): string
 
 /**
  * Dependency-free grouped bar chart (inline SVG).
- * $series = [['key'=>'revenue','label'=>'Revenue','color'=>'#0F766E'], ...]
+ * $series = [['key'=>'revenue','label'=>'Revenue','color'=>'#2E5A4A'], ...]
  */
 function svg_grouped_bars(array $rows, string $labelKey, array $series, int $width = 900, int $height = 260): string
 {

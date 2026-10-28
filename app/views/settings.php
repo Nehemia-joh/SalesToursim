@@ -1,12 +1,12 @@
 <?php /** settings.php - lists + fx + company */
 $title = 'Settings';
 ?>
-<div class="topbar"><h1>Settings</h1><a class="btn ghost" href="index.php?page=users">Manage Users →</a></div>
+<div class="topbar"><h1>Settings</h1><a class="btn ghost" href="index.php?page=users">Manage users</a></div>
 
 <div class="two">
   <div class="card">
-    <h2>Dropdown Lists (Sales Lists)</h2>
-    <p class="hint">These feed the dropdowns in every form — add your own categories, statuses and sources here. The internal key is shown in small text.</p>
+    <h2>Dropdown lists (sales lists)</h2>
+    <p class="hint">These feed the dropdowns in every form. Add your own categories, statuses and sources here. The internal key is shown in small text.</p>
     <?php foreach ($lists as $name => $items): ?>
       <details <?= $name === 'lead_source' ? 'open' : '' ?>>
         <summary><b><?= e(ucwords(str_replace('_', ' ', $name))) ?></b> <span class="bdg dim"><?= count($items) ?> items</span> <small class="hint"><?= e($name) ?></small></summary>
@@ -39,8 +39,8 @@ $title = 'Settings';
   </div>
 
   <div class="card">
-    <h2>Currency Conversion (rate to base)</h2>
-    <p class="hint">1 unit of the currency = this many <?= e($base_cur) ?>. Salesperson uses these to normalise mixed-currency money.</p>
+    <h2>Currency conversion (rate to base)</h2>
+    <p class="hint">1 unit of the currency = this many <?= e($base_cur) ?>. Salespeople use these to normalise mixed-currency money.</p>
     <form method="post" action="index.php?page=save_fx">
       <?= csrf_field() ?>
       <table class="grid small">
@@ -63,7 +63,7 @@ $title = 'Settings';
       <button class="btn primary" type="submit">Save FX rates</button>
     </form>
 
-    <h2>Company Settings</h2>
+    <h2>Company settings</h2>
     <table class="grid small">
       <thead><tr><th>Key</th><th>Value</th></tr></thead>
       <tbody>

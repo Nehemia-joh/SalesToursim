@@ -1,10 +1,11 @@
 <?php /** users.php */
 $title = 'Users';
 ?>
-<div class="topbar"><h1>User Accounts</h1><span class="bdg info">System Admin only</span></div>
+<div class="topbar"><h1>User accounts</h1><span class="bdg info">System admin only</span></div>
 
 <div class="card full">
-  <h2>Existing Users</h2>
+  <h2>Existing users</h2>
+  <div class="tablewrap">
   <table class="grid">
     <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th class="ops">Actions</th></tr></thead>
     <tbody>
@@ -14,16 +15,18 @@ $title = 'Users';
         <td><?= badge(ucfirst($r['role'])) ?></td>
         <td><?= badge($r['active'] ? 'Active' : 'Inactive') ?></td>
         <td class="dt"><?= e(date('d M Y', strtotime($r['created_at']))) ?></td>
-        <td class="ops"><a class="btn tiny" href="#edit<?= (int)$r['id'] ?>">Edit below</a></td>
+        <td class="ops"><a class="btn tiny" href="index.php?page=users&edit=<?= (int)$r['id'] ?>#user-form">Edit below</a></td>
       </tr>
     <?php endforeach; ?>
     </tbody>
   </table>
+  </div>
 </div>
 
 <?php $eu = $u ?? null; ?>
-<div class="card form">
-  <h2><?= $eu ? 'Edit ' . e($eu['name']) : 'Add a User' ?></h2>
+<div class="card form" id="user-form">
+  <h2><?= $eu ? 'Edit ' . e($eu['name']) : 'Add a user' ?></h2>
+  <?php if ($eu): ?><p class="hint">Editing an existing account. <a href="index.php?page=users">Cancel</a>.</p><?php endif; ?>
   <form method="post" action="index.php?page=save_user">
     <?= csrf_field() ?>
     <input type="hidden" name="id" value="<?= (int)($eu['id'] ?? 0) ?>">
