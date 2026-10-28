@@ -193,6 +193,18 @@ function crud_form(string $module, int $id = 0): void
     unset($_SESSION['form_old']);
     if ($old !== null) $row = $old;
 
+    // "Use" on a task template opens a follow-up form pre-filled with its task.
+    if ($id === 0 && $module === 'followups' && !empty($_GET['template_id'])) {
+        $tpl = DB::one('SELECT * FROM task_templates WHERE id = ? AND active = 1', [(int)$_GET['template_id']]);
+        if ($tpl) {
+            if (!is_array($row)) $row = [];
+            $row['action']   = $tpl['action'];
+            $row['priority'] = $tpl['priority'];
+            $row['due_date'] = date('Y-m-d', strtotime('+' . max(0, (int)$tpl['due_days']) . ' days'));
+            $row['notes']    = 'Created from task template: ' . $tpl['name'];
+        }
+    }
+
     view('crud_form', ['m' => $m, 'module' => $module, 'row' => $row, 'id' => $id]);
 }
 
@@ -227,7 +239,11 @@ function crud_save(string $module): void
     foreach ($m['fields'] as $f) {
         [$name, $label, $type] = $f;
         if (($f[4] ?? '') === 'virtual') continue;   // UI-only helper field
-        $data[$name] = crud_cast($type, $_POST[$name] ?? '');
+        if ($type === 'bool') {
+            $data[$name] = !empty($_POST[$name]) ? 1 : 0;
+        } else {
+            $data[$name] = crud_cast($type, $_POST[$name] ?? '');
+        }
         if (($f[3] ?? '') === 'req') $reqFields[$name] = $label;
     }
 

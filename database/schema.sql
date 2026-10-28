@@ -106,20 +106,70 @@ CREATE TABLE IF NOT EXISTS `opportunities` (
 
 -- ---------- quotations ----------
 CREATE TABLE IF NOT EXISTS `quotations` (
-  `id`          INT AUTO_INCREMENT PRIMARY KEY,
-  `inquiry_id`  INT NULL,
-  `booking_id`  INT NULL,
-  `quote_date`  DATE NULL,
-  `valid_until` DATE NULL,
-  `tour`        VARCHAR(150) NULL,
-  `pax`         INT NULL,
-  `amount`      DECIMAL(12,2) NULL,
-  `currency`    CHAR(3) DEFAULT 'USD',
-  `status`      VARCHAR(20) NULL,
-  `prepared_by` INT NULL,
-  `version`     INT DEFAULT 1,
-  `notes`       TEXT NULL,
-  KEY `idx_inquiry` (`inquiry_id`), KEY `idx_status` (`status`)
+  `id`              INT AUTO_INCREMENT PRIMARY KEY,
+  `inquiry_id`      INT NULL,
+  `booking_id`      INT NULL,
+  `quote_date`      DATE NULL,
+  `valid_until`     DATE NULL,
+  `tour`            VARCHAR(150) NULL,
+  `pax`             INT NULL,
+  `amount`          DECIMAL(12,2) NULL,
+  `currency`        CHAR(3) DEFAULT 'USD',
+  `status`          VARCHAR(20) NULL,
+  `prepared_by`     INT NULL,
+  `version`         INT DEFAULT 1,
+  `notes`           TEXT NULL,
+  `public_token`    VARCHAR(64) NULL,
+  `public_enabled`  TINYINT(1) NOT NULL DEFAULT 1,
+  `cover_note`      TEXT NULL,
+  `inclusions`      TEXT NULL,
+  `exclusions`      TEXT NULL,
+  `terms`           TEXT NULL,
+  `client_response` VARCHAR(20) NULL,
+  `client_comment`  TEXT NULL,
+  `responded_at`    DATETIME NULL,
+  KEY `idx_inquiry` (`inquiry_id`), KEY `idx_status` (`status`),
+  UNIQUE KEY `uq_public_token` (`public_token`)
+) ENGINE=InnoDB;
+
+-- ---------- quote itinerary days ----------
+CREATE TABLE IF NOT EXISTS `quote_days` (
+  `id`            INT AUTO_INCREMENT PRIMARY KEY,
+  `quotation_id`  INT NOT NULL,
+  `day_no`        INT NULL,
+  `title`         VARCHAR(180) NULL,
+  `description`   TEXT NULL,
+  `accommodation` VARCHAR(180) NULL,
+  `meals`         VARCHAR(120) NULL,
+  `notes`         TEXT NULL,
+  `sort`          INT DEFAULT 0,
+  KEY `idx_quote` (`quotation_id`)
+) ENGINE=InnoDB;
+
+-- ---------- quote priced items ----------
+CREATE TABLE IF NOT EXISTS `quote_items` (
+  `id`           INT AUTO_INCREMENT PRIMARY KEY,
+  `quotation_id` INT NOT NULL,
+  `category`     VARCHAR(50) NULL,
+  `description`  VARCHAR(255) NULL,
+  `qty`          DECIMAL(10,2) DEFAULT 1,
+  `unit`         VARCHAR(40) NULL,
+  `unit_price`   DECIMAL(12,2) DEFAULT 0,
+  `total`        DECIMAL(12,2) DEFAULT 0,
+  `optional`     TINYINT(1) NOT NULL DEFAULT 0,
+  `sort`         INT DEFAULT 0,
+  KEY `idx_quote` (`quotation_id`)
+) ENGINE=InnoDB;
+
+-- ---------- public proposal view tracking ----------
+CREATE TABLE IF NOT EXISTS `quote_views` (
+  `id`           INT AUTO_INCREMENT PRIMARY KEY,
+  `quotation_id` INT NOT NULL,
+  `viewed_at`    DATETIME NOT NULL,
+  `ip`           VARCHAR(45) NULL,
+  `user_agent`   VARCHAR(255) NULL,
+  KEY `idx_quote` (`quotation_id`),
+  KEY `idx_viewed` (`viewed_at`)
 ) ENGINE=InnoDB;
 
 -- ---------- follow-ups ----------
@@ -158,6 +208,68 @@ CREATE TABLE IF NOT EXISTS `bookings` (
   KEY `idx_client` (`client_id`), KEY `idx_inquiry` (`inquiry_id`),
   KEY `idx_status` (`status`), KEY `idx_salesperson` (`salesperson`),
   KEY `idx_bdate` (`booking_date`)
+) ENGINE=InnoDB;
+
+-- ---------- travelers ----------
+CREATE TABLE IF NOT EXISTS `travelers` (
+  `id`                INT AUTO_INCREMENT PRIMARY KEY,
+  `booking_id`        INT NULL,
+  `inquiry_id`        INT NULL,
+  `full_name`         VARCHAR(150) NOT NULL,
+  `dob`               DATE NULL,
+  `nationality`       VARCHAR(80) NULL,
+  `passport_no`       VARCHAR(60) NULL,
+  `passport_expiry`   DATE NULL,
+  `dietary`           VARCHAR(255) NULL,
+  `allergies`         VARCHAR(255) NULL,
+  `medical_notes`     TEXT NULL,
+  `emergency_contact` VARCHAR(180) NULL,
+  `room_preference`   VARCHAR(120) NULL,
+  `notes`             TEXT NULL,
+  `created_at`        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  KEY `idx_booking` (`booking_id`),
+  KEY `idx_inquiry` (`inquiry_id`)
+) ENGINE=InnoDB;
+
+-- ---------- reusable proposal content ----------
+CREATE TABLE IF NOT EXISTS `content_library` (
+  `id`         INT AUTO_INCREMENT PRIMARY KEY,
+  `title`      VARCHAR(160) NOT NULL,
+  `category`   VARCHAR(60) NULL,
+  `body`       TEXT NOT NULL,
+  `tags`       VARCHAR(255) NULL,
+  `active`     TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  KEY `idx_category` (`category`),
+  KEY `idx_active` (`active`)
+) ENGINE=InnoDB;
+
+-- ---------- reusable email / WhatsApp / SMS messages ----------
+CREATE TABLE IF NOT EXISTS `message_templates` (
+  `id`         INT AUTO_INCREMENT PRIMARY KEY,
+  `name`       VARCHAR(160) NOT NULL,
+  `channel`    VARCHAR(30) NULL,
+  `subject`    VARCHAR(200) NULL,
+  `body`       TEXT NOT NULL,
+  `category`   VARCHAR(60) NULL,
+  `active`     TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  KEY `idx_channel` (`channel`),
+  KEY `idx_active` (`active`)
+) ENGINE=InnoDB;
+
+-- ---------- reusable follow-up task templates ----------
+CREATE TABLE IF NOT EXISTS `task_templates` (
+  `id`            INT AUTO_INCREMENT PRIMARY KEY,
+  `name`          VARCHAR(160) NOT NULL,
+  `trigger_stage` VARCHAR(40) NULL,
+  `action`        VARCHAR(255) NOT NULL,
+  `due_days`      INT DEFAULT 3,
+  `priority`      VARCHAR(20) NULL,
+  `active`        TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  KEY `idx_stage` (`trigger_stage`),
+  KEY `idx_active` (`active`)
 ) ENGINE=InnoDB;
 
 -- ---------- payment schedule (planned milestones) ----------

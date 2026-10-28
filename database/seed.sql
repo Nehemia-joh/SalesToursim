@@ -7,6 +7,8 @@ TRUNCATE users; TRUNCATE list_items; TRUNCATE fx_rates; TRUNCATE settings;
 TRUNCATE clients; TRUNCATE inquiries; TRUNCATE opportunities; TRUNCATE quotations;
 TRUNCATE follow_ups; TRUNCATE bookings; TRUNCATE payment_schedule; TRUNCATE payments;
 TRUNCATE sales_targets; TRUNCATE activities;
+TRUNCATE quote_days; TRUNCATE quote_items; TRUNCATE quote_views;
+TRUNCATE travelers; TRUNCATE content_library; TRUNCATE message_templates; TRUNCATE task_templates;
 
 -- users - password for everyone: demo1234 (change after first login!)
 INSERT INTO users (id,name,email,salt,password_hash,role,active) VALUES (1,'System Admin','admin@michaeltourism.com','f226d5e63ff6093e6910e4db036ef89c','b9802cc55db08c2840a6add5d198707d4f82662205e97da4347bdb9b634d475f','admin',1);

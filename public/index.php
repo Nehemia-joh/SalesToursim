@@ -21,6 +21,7 @@ require_once APP_PATH . '/controllers/dashboard.php';
 require_once APP_PATH . '/controllers/reports.php';
 require_once APP_PATH . '/controllers/settings.php';
 require_once APP_PATH . '/controllers/users.php';
+require_once APP_PATH . '/controllers/quotes.php';
 
 /* Use the timezone configured on the server (important for "today" and date math). */
 date_default_timezone_set(Env::get('APP_TIMEZONE', 'Africa/Dar_es_Salaam'));
@@ -59,6 +60,16 @@ if ($page === 'logout') {
     redirect('page=login');
 }
 
+/* Public client-facing proposal (no login) */
+if ($page === 'proposal') {
+    quote_public((string)($_GET['token'] ?? ''));
+    exit;
+}
+if ($page === 'proposal_respond') {
+    quote_respond();
+    exit;
+}
+
 /* ---------- everything below requires a session ---------- */
 Auth::start();
 Auth::check();
@@ -76,6 +87,11 @@ switch ($page) {
     case 'delete_list_item':  settings_delete_list_item(); break;
     case 'save_user':         users_save();          break;
     case 'delete_user':       users_delete();        break;
+
+    case 'quote_builder':     quote_builder((int)($_GET['id'] ?? 0));   break;
+    case 'quote_builder_save': quote_builder_save((int)($_POST['id'] ?? 0)); break;
+    case 'quote_share':       quote_share((int)($_POST['id'] ?? 0));    break;
+    case 'quote_reset_link':  quote_reset_link((int)($_POST['id'] ?? 0)); break;
 
     default:
         $m = module_config($page);

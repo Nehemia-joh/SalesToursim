@@ -7,6 +7,28 @@ function url(string $query): string
     return 'index.php?' . $query;
 }
 
+/** absolute URL for public proposal links (uses APP_URL when configured) */
+function absolute_url(string $query): string
+{
+    $base = rtrim(Env::get('APP_URL', ''), '/');
+    if ($base === '') {
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $dir    = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/');
+        $base   = $scheme . '://' . $host . ($dir === '/' ? '' : $dir);
+    }
+    return $base . '/index.php?' . $query;
+}
+
+/** read one key from the settings table, with a fallback */
+function setting(string $key, string $default = ''): string
+{
+    static $cache = [];
+    if (array_key_exists($key, $cache)) return $cache[$key];
+    $v = DB::val('SELECT v FROM settings WHERE k = ? LIMIT 1', [$key]);
+    return $cache[$key] = ($v === false || $v === null) ? $default : (string)$v;
+}
+
 /** escape for HTML */
 function e(?string $s): string
 {

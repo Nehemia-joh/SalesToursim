@@ -103,6 +103,12 @@ $maxFunnelN = max(1, max(array_merge([1], array_column($funnel, 'n'))));
       <div class="alertbox <?= $kpi['quotes_expiring'] > 0 ? 'warn' : '' ?>">
         <b>Quotes expiring</b><span><?= $kpi['quotes_expiring'] ?> within 7 days</span>
       </div>
+      <div class="alertbox <?= $kpi['quotes_awaiting'] > 0 ? 'warn' : '' ?>">
+        <b>Awaiting client response</b><span><?= $kpi['quotes_awaiting'] ?> sent / revised proposals</span>
+      </div>
+      <div class="alertbox">
+        <b>Proposal views (7 days)</b><span><?= $kpi['proposal_views_7d'] ?> views · <?= $kpi['quotes_opened_7d'] ?> proposals opened</span>
+      </div>
     </div>
 
     <h3>Payment alarms — overdue: <?= count($todos['overdue_sch']) ?> · due ≤7 days: <?= count($todos['due_sch']) ?></h3>
@@ -198,6 +204,67 @@ $maxFunnelN = max(1, max(array_merge([1], array_column($funnel, 'n'))));
       <?php if (!$topClients): ?><tr><td colspan="3" class="empty">No firm bookings yet.</td></tr><?php endif; ?>
       </tbody>
     </table>
+    </div>
+  </div>
+</div>
+
+<div class="card full">
+  <div class="topbar" style="margin-bottom:8px">
+    <div>
+      <h2 style="margin:0">Running &amp; upcoming tours</h2>
+      <p class="hint" style="margin:4px 0 0">Tours on the road now, plus departures in the next 7 days.</p>
+    </div>
+    <div class="tools">
+      <a class="btn ghost" href="index.php?page=bookings">All bookings</a>
+      <a class="btn ghost" href="index.php?page=travelers">Travelers</a>
+    </div>
+  </div>
+
+  <div class="two equal">
+    <div>
+      <h3>On tour now (<?= count($todos['running_tours']) ?>)</h3>
+      <div class="tablewrap">
+      <table class="grid small">
+        <thead><tr><th>Ref</th><th>Tour</th><th>Client</th><th>Dates</th><th class="num">Pax</th><th class="num">Travelers</th><th>Status</th></tr></thead>
+        <tbody>
+        <?php foreach ($todos['running_tours'] as $t): ?>
+          <tr>
+            <td class="cd"><?= e($t['bk_code']) ?></td>
+            <td class="celltext"><?= e($t['tour']) ?></td>
+            <td><?= e($t['client_name'] ?? '') ?></td>
+            <td class="dt"><?= e(date('d M', strtotime($t['arrival']))) ?> → <?= e(date('d M Y', strtotime($t['departure']))) ?></td>
+            <td class="num"><?= (int)$t['pax'] ?></td>
+            <td class="num"><?= (int)$t['traveler_count'] ?></td>
+            <td><?= badge((string)$t['status']) ?></td>
+          </tr>
+        <?php endforeach; ?>
+        <?php if (!$todos['running_tours']): ?><tr><td colspan="7" class="empty">No tours on the road today.</td></tr><?php endif; ?>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div>
+      <h3>Departing in the next 7 days (<?= count($todos['upcoming_tours']) ?>)</h3>
+      <div class="tablewrap">
+      <table class="grid small">
+        <thead><tr><th>Ref</th><th>Tour</th><th>Client</th><th>Arrival</th><th class="num">Pax</th><th class="num">Travelers</th><th>Owner</th></tr></thead>
+        <tbody>
+        <?php foreach ($todos['upcoming_tours'] as $t): ?>
+          <tr>
+            <td class="cd"><?= e($t['bk_code']) ?></td>
+            <td class="celltext"><?= e($t['tour']) ?></td>
+            <td><?= e($t['client_name'] ?? '') ?></td>
+            <td class="dt"><?= e(date('d M', strtotime($t['arrival']))) ?> <span class="hint">(in <?= (int)$t['days_to_arrival'] ?>d)</span></td>
+            <td class="num"><?= (int)$t['pax'] ?></td>
+            <td class="num"><?= (int)$t['traveler_count'] ?></td>
+            <td><?= e($t['sp_name'] ?? '') ?></td>
+          </tr>
+        <?php endforeach; ?>
+        <?php if (!$todos['upcoming_tours']): ?><tr><td colspan="7" class="empty">No departures in the next 7 days.</td></tr><?php endif; ?>
+        </tbody>
+      </table>
+      </div>
     </div>
   </div>
 </div>

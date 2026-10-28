@@ -232,7 +232,9 @@ function build_modules(): array
               u.name                                               AS sp_name,
               IF(t.booking_id IS NULL,'-',CONCAT('BK-',LPAD(t.booking_id,3,'0'))) AS bk_code,
               CASE WHEN t.status IN ('Sent','Revised') AND t.valid_until IS NOT NULL
-                        AND t.valid_until < CURDATE() THEN 'Expired' ELSE '' END AS flag
+                        AND t.valid_until < CURDATE() THEN 'Expired' ELSE '' END AS flag,
+              (SELECT COUNT(*) FROM quote_views v WHERE v.quotation_id=t.id) AS view_count,
+              (SELECT MAX(v.viewed_at) FROM quote_views v WHERE v.quotation_id=t.id) AS last_viewed
             FROM quotations t
             LEFT JOIN inquiries i ON i.id = t.inquiry_id
             LEFT JOIN clients   c ON c.id = i.client_id
@@ -257,6 +259,8 @@ function build_modules(): array
             ['bk_code', 'Booking', 'code'],
             ['sp_name', 'Prepared By', 'text'],
             ['version', 'Version', 'int'],
+            ['view_count', 'Views', 'int'],
+            ['last_viewed', 'Last Viewed', 'datetime'],
             ['notes', 'Notes', 'text'],
         ],
         'fields' => [
@@ -610,6 +614,145 @@ function build_modules(): array
             ['salesperson',      'Salesperson',   'users'],
             ['duration_min',     'Duration (min)', 'int'],
         ],
+    ];
+
+    // ============================================================ TRAVELERS
+    $M['travelers'] = [
+        'table'   => 'travelers',
+        'title'   => 'Travelers',
+        'prefix'  => 'TRV',
+        'ordered' => 't.id DESC',
+        'select'  => "
+            SELECT t.*,
+              CONCAT('TRV-',LPAD(t.id,3,'0'))                                     AS code,
+              IF(t.booking_id IS NULL,'',CONCAT('BK-',LPAD(t.booking_id,3,'0')))  AS bk_code,
+              IF(t.inquiry_id IS NULL,'',CONCAT('INQ-',LPAD(t.inquiry_id,3,'0'))) AS inq_code,
+              c.name                                                              AS client_name,
+              COALESCE(b.tour, i.tour)                                            AS tour
+            FROM travelers t
+            LEFT JOIN bookings  b ON b.id = t.booking_id
+            LEFT JOIN inquiries i ON i.id = t.inquiry_id
+            LEFT JOIN clients   c ON c.id = COALESCE(b.client_id, i.client_id)",
+        'cols' => [
+            ['code', 'ID', 'code'],
+            ['full_name', 'Traveler', 'text'],
+            ['bk_code', 'Booking', 'code'],
+            ['inq_code', 'Inquiry', 'code'],
+            ['client_name', 'Client', 'text'],
+            ['tour', 'Tour', 'text'],
+            ['nationality', 'Nationality', 'text'],
+            ['passport_no', 'Passport', 'text'],
+            ['passport_expiry', 'Passport Expiry', 'date'],
+            ['dietary', 'Dietary', 'text'],
+            ['allergies', 'Allergies', 'text'],
+            ['emergency_contact', 'Emergency Contact', 'text'],
+        ],
+        'fields' => [
+            ['booking_id',        'Booking (optional)', 'ref:bookings'],
+            ['inquiry_id',        'Inquiry (optional)', 'ref:inquiries'],
+            ['full_name',         'Full Name',          'text', 'req'],
+            ['dob',               'Date of Birth',      'date'],
+            ['nationality',       'Nationality',        'text'],
+            ['passport_no',       'Passport Number',    'text'],
+            ['passport_expiry',   'Passport Expiry',    'date'],
+            ['dietary',           'Dietary Requirements', 'text'],
+            ['allergies',         'Allergies',          'text'],
+            ['medical_notes',     'Medical Notes',      'textarea'],
+            ['emergency_contact', 'Emergency Contact',  'text'],
+            ['room_preference',   'Room Preference',    'text'],
+            ['notes',             'Notes',              'textarea'],
+        ],
+    ];
+
+    // ============================================================ CONTENT LIBRARY
+    $M['content_library'] = [
+        'table'   => 'content_library',
+        'title'   => 'Content Library',
+        'prefix'  => 'CNT',
+        'ordered' => 't.id DESC',
+        'select'  => "
+            SELECT t.*,
+              CONCAT('CNT-',LPAD(t.id,3,'0')) AS code,
+              IF(t.active = 1,'Active','Inactive') AS active_label
+            FROM content_library t",
+        'cols' => [
+            ['code', 'ID', 'code'],
+            ['title', 'Title', 'text'],
+            ['category', 'Category', 'text'],
+            ['tags', 'Tags', 'text'],
+            ['active_label', 'Status', 'badge'],
+            ['created_at', 'Created', 'datetime'],
+        ],
+        'fields' => [
+            ['title',    'Title',    'text', 'req'],
+            ['category', 'Category', 'text'],
+            ['body',     'Content',  'textarea', 'req'],
+            ['tags',     'Tags',     'text'],
+            ['active',   'Active',   'bool'],
+        ],
+        'defaults' => ['active' => 1],
+    ];
+
+    // ============================================================ MESSAGE TEMPLATES
+    $M['message_templates'] = [
+        'table'   => 'message_templates',
+        'title'   => 'Message Templates',
+        'prefix'  => 'MSG',
+        'ordered' => 't.id DESC',
+        'select'  => "
+            SELECT t.*,
+              CONCAT('MSG-',LPAD(t.id,3,'0')) AS code,
+              IF(t.active = 1,'Active','Inactive') AS active_label
+            FROM message_templates t",
+        'cols' => [
+            ['code', 'ID', 'code'],
+            ['name', 'Name', 'text'],
+            ['channel', 'Channel', 'text'],
+            ['subject', 'Subject', 'text'],
+            ['category', 'Category', 'text'],
+            ['active_label', 'Status', 'badge'],
+            ['created_at', 'Created', 'datetime'],
+        ],
+        'fields' => [
+            ['name',     'Name',     'text', 'req'],
+            ['channel',  'Channel',  'text'],
+            ['subject',  'Subject',  'text'],
+            ['body',     'Message',  'textarea', 'req'],
+            ['category', 'Category', 'text'],
+            ['active',   'Active',   'bool'],
+        ],
+        'defaults' => ['active' => 1, 'channel' => 'Email'],
+    ];
+
+    // ============================================================ TASK TEMPLATES
+    $M['task_templates'] = [
+        'table'   => 'task_templates',
+        'title'   => 'Task Templates',
+        'prefix'  => 'TSK',
+        'ordered' => 't.id DESC',
+        'select'  => "
+            SELECT t.*,
+              CONCAT('TSK-',LPAD(t.id,3,'0')) AS code,
+              IF(t.active = 1,'Active','Inactive') AS active_label
+            FROM task_templates t",
+        'cols' => [
+            ['code', 'ID', 'code'],
+            ['name', 'Name', 'text'],
+            ['trigger_stage', 'Trigger Stage', 'text'],
+            ['action', 'Task', 'text'],
+            ['due_days', 'Due (days)', 'int'],
+            ['priority', 'Priority', 'badge'],
+            ['active_label', 'Status', 'badge'],
+        ],
+        'fields' => [
+            ['name',          'Name',          'text', 'req'],
+            ['trigger_stage', 'Trigger Stage', 'list:sales_stage'],
+            ['action',        'Task',          'text', 'req'],
+            ['due_days',      'Due (days)',    'int'],
+            ['priority',      'Priority',      'list:priority'],
+            ['active',        'Active',        'bool'],
+        ],
+        'defaults' => ['active' => 1, 'due_days' => 3],
     ];
 
     return $M;

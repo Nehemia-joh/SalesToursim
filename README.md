@@ -34,9 +34,11 @@ DB_USER=your_mysql_user
 DB_PASS=your_mysql_password
 BASE_CURRENCY=USD
 APP_KEY=any-long-random-string
+APP_URL=http://localhost:8000
 ```
 
 > The loader checks `.envWebVersion` first; legacy `.envSalesTourism` / `.env` names are still supported.
+> `APP_URL` is used when the app builds the public proposal link. On the live site set it to `https://salestourism.nexabie.co.tz`.
 
 ## 3. Create the database and import the schema
 
@@ -45,6 +47,14 @@ mysql -u USER -p -e "CREATE DATABASE my_db_name CHARACTER SET utf8mb4"
 mysql -u USER -p my_db_name < database/schema.sql
 mysql -u USER -p my_db_name < database/seed.sql     # optional: demo data
 ```
+
+If the database was created from the original schema (before the proposal/traveler upgrade), run the Phase 1 migration once:
+
+```bash
+mysql -u USER -p my_db_name < database/phase1_quotes_travelers.sql
+```
+
+Fresh installs do **not** need the migration: `schema.sql` already contains the new columns and tables.
 
 `seed.sql` re-creates the same demo dataset used in the Excel workbook
 (Aug–Oct 2026, 45 inquiries, 20 bookings, $248,800 booking value,
@@ -91,6 +101,7 @@ git push -u origin main
 3. Note the full names — cPanel prefixes them, e.g. `cpuser_sales` and `cpuser_salesuser`.
 4. Open **phpMyAdmin**, select the database, then run/import `database/schema.sql`.
 5. Optional: run/import `database/seed.sql` to load the demo data and demo login.
+6. If this database already existed before the quote-builder upgrade, do **not** re-import `schema.sql`; import `database/phase1_quotes_travelers.sql` once instead.
 
 If you import only `schema.sql`, run `database/create_admin.sql` next (change the email and password in that file first) so you can log in.
 
@@ -115,6 +126,7 @@ DB_NAME=cpuser_sales
 DB_USER=cpuser_salesuser
 DB_PASS=your-real-password
 APP_KEY=replace-with-openssl-rand-hex-32
+APP_URL=https://salestourism.nexabie.co.tz
 ```
 
 The file must sit outside `public/` — in the app folder next to `app/` and `public/`.
@@ -180,17 +192,33 @@ If you imported `seed.sql`, log in with `admin@michaeltourism.com` / `demo1234`,
 | `app/DB.php`              | PDO helpers |
 | `app/Auth.php`            | Login/session (sha256 salt+hash) |
 | `app/modules.php`         | Module definitions (drives all list/add/edit screens) |
-| `app/controllers/`        | Dashboard, Reports, Settings, Users + generic CRUD |
+| `app/controllers/`        | Dashboard, Reports, Settings, Users, Quote Builder + generic CRUD |
+| `app/controllers/quotes.php` | Quote builder, public proposal, view tracking and client response |
 | `app/views/`              | HTML templates |
-| `database/schema.sql`     | All tables |
+| `app/views/quote_builder.php` | Day-by-day itinerary and priced-item editor |
+| `app/views/proposal.php`  | Client-facing public proposal and print/PDF layout |
+| `database/schema.sql`     | All tables (fresh install) |
+| `database/phase1_quotes_travelers.sql` | Upgrade script for existing databases |
 | `database/gen_seed.py`    | Regenerates `seed.sql` (needs Python 3) |
 
 ## 6. Modules (mirror of the Excel sheets)
 
 Dashboard · Client Database · Inquiry Log · Sales Pipeline (weighted) ·
-Quotation Tracker · Follow-Up Manager · Bookings · Payment Schedule ·
-Payments · Sales Targets · Activity Log · Management Reports · Settings &
-Lists · Users.
+Quotation Tracker + Quote Builder · Follow-Up Manager · Bookings · Travelers ·
+Payment Schedule · Payments · Sales Targets · Activity Log · Content Library ·
+Message Templates · Task Templates · Management Reports · Settings & Lists · Users.
+
+### Quote-to-cash additions (Phase 1)
+
+- **Quote Builder** — day-by-day itinerary, priced items (with optional extras), cover note, inclusions, exclusions and terms.
+- **Public proposal** — a secure, no-login client link with branded print/PDF layout; the client can accept, request changes or decline online.
+- **Proposal view tracking** — every public view is logged; the quote list and builder show view counts and the last view time.
+- **Accepted-proposal automation** — accepting a proposal creates a tentative booking and a follow-up task, and links the booking back to the quote.
+- **Traveler profiles** — passport, date of birth, nationality, dietary needs, allergies, medical notes, emergency contact and room preference per traveler.
+- **Content library** — reusable inclusions, exclusions, terms, policies and destination notes, insertable from the Quote Builder.
+- **Message templates** — reusable email/WhatsApp/SMS wording with automatic quote, client and amount placeholders.
+- **Task templates** — standard follow-up actions by pipeline stage, due-in days and priority; click **Use** to create a pre-filled follow-up.
+- **Running tours dashboard** — tours currently on the road and departures in the next 7 days, with pax and traveler-profile counts.
 
 Business logic carried over from the workbook:
 
@@ -243,7 +271,7 @@ with the same step-by-step order as the workbook. Useful shortcuts:
 
 1. New inquiry arrives → *Inquiry Log* (+ New)
 2. Track opportunities → *Sales Pipeline*
-3. Send → *Quotation Tracker* (Valid-Until expires automatically)
+3. Build and send → *Quotation Tracker → Build* (itinerary, priced items, public proposal link; Valid-Until expires automatically)
 4. Follow-ups → *Follow-Up Manager* (overdues turn red)
 5. Accepted → *Bookings* → set *Payment Schedule* milestones
 6. Collect money → *Payments* (status/payment KPIs update everywhere)

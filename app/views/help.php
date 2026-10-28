@@ -15,7 +15,7 @@ $title = 'How to use';
   <a href="index.php?page=clients"><b>1</b><span>Client</span></a>
   <a href="index.php?page=inquiries&action=form"><b>2</b><span>Inquiry</span></a>
   <a href="index.php?page=pipeline&action=form"><b>3</b><span>Pipeline</span></a>
-  <a href="index.php?page=quotations&action=form"><b>4</b><span>Quotation</span></a>
+  <a href="index.php?page=quotations&action=form"><b>4</b><span>Quote / proposal</span></a>
   <a href="index.php?page=followups&action=form"><b>5</b><span>Follow-up</span></a>
   <a href="index.php?page=bookings&action=form"><b>6</b><span>Booking</span></a>
   <a href="index.php?page=schedule&action=form"><b>7</b><span>Payment plan</span></a>
@@ -72,8 +72,10 @@ $title = 'How to use';
   <p>Create one opportunity per inquiry. Choose the stage, probability, estimated value, expected close date and owner. The system calculates <b>weighted value = estimated value × probability %</b>.</p>
   <p>Stages follow the Excel order: New Inquiry → Qualified → Quotation Sent → Follow-Up → Negotiation → Confirmed → Lost / Inactive. If a deal is lost, always record the lost reason.</p>
 
-  <h3>4 · Quotations</h3>
+  <h3>4 · Quotations &amp; proposals</h3>
   <p>Choose the inquiry and the tour, pax, amount, currency and owner are pre-filled when you save. Record the quote date, validity date, version and status (Draft / Sent / Revised / Accepted / Rejected). The list flags expired quotes and links the quote to the booking once it is won.</p>
+  <p>For a client-ready proposal, open <b>Quotations → Build</b>. Add day-by-day itinerary lines, priced items, inclusions, exclusions, terms and a cover note. Optional items are shown separately from the base total. Then generate a <b>public proposal link</b> and send it to the client: it works without a login, records every view, and lets the client accept, request changes or decline online. An accepted proposal creates a tentative booking and a follow-up task automatically.</p>
+  <p>Set the company name, email, phone, website and tagline in <b>Settings</b> — they appear on the proposal header and footer.</p>
 
   <h3>5 · Follow-Up Manager</h3>
   <p>Every call, email or meeting that needs a future action belongs here: action, due date, priority, owner and status. Overdue days are calculated from the due date. The dashboard shows overdue tasks by salesperson, due this week, and the total open workload.</p>
@@ -87,6 +89,9 @@ $title = 'How to use';
   </ul>
   <p>Received, outstanding, gross profit, margin and payment status are calculated. Tentative holds appear in the dashboard action centre until you confirm or release them.</p>
 
+  <h3>6b · Travelers</h3>
+  <p>Add every traveler against the booking (or inquiry): full name, date of birth, nationality, passport number and expiry, dietary needs, allergies, medical notes, emergency contact and room preference. The dashboard shows how many traveler profiles are linked to each running or upcoming tour, so you can see at a glance who is still missing.</p>
+
   <h3>7 · Payment Schedule</h3>
   <p>Split the booking into milestones — Deposit, Second Payment, Balance, etc. Each row has a due date, amount due, amount paid and date paid. The system calculates variance, days late and milestone status.</p>
 
@@ -98,6 +103,15 @@ $title = 'How to use';
 
   <h3>10 · Activity Log</h3>
   <p>Use this as the diary: calls, emails, meetings, site visits and notes. Activities are linked to an inquiry so the full client history stays together.</p>
+
+  <h3>11 · Content Library</h3>
+  <p>Save reusable proposal text — inclusions, exclusions, payment terms, cancellation policies, destination notes and welcome paragraphs. In the Quote Builder, choose a block and insert it into the cover note, inclusions, exclusions or terms with one click.</p>
+
+  <h3>12 · Message Templates</h3>
+  <p>Save email, WhatsApp and SMS wording for quotes, reminders, payment chases and post-trip follow-ups. In the Quote Builder, pick a template and the system fills in the client name, quote number, tour, amount, validity date and salesperson before you copy it.</p>
+
+  <h3>13 · Task Templates</h3>
+  <p>Standardise the follow-up steps that should happen at each pipeline stage. Each template stores the task, trigger stage, due-in days and priority so the team works the same playbook. Click <b>Use</b> on a template to open a new follow-up with the task, priority and due date already filled in.</p>
 </div>
 
 <div class="two">

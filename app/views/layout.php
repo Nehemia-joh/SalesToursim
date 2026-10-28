@@ -31,6 +31,7 @@
           ],
           'Money' => [
             ['bookings',     'Bookings'],
+            ['travelers',    'Travelers'],
             ['schedule',     'Payment Schedule'],
             ['payments',     'Payments'],
           ],
@@ -39,6 +40,11 @@
             ['targets',      'Sales Targets'],
             ['settings',     'Settings'],
             ['help',         'How to use'],
+          ],
+          'Library' => [
+            ['content_library',   'Content Library'],
+            ['message_templates', 'Message Templates'],
+            ['task_templates',    'Task Templates'],
           ],
         ];
         foreach ($groups as $label => $items): ?>

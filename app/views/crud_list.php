@@ -28,12 +28,23 @@
           <?php elseif ($type === 'money'): ?> <td class="num <?= (float)$v < 0 ? 'neg' : '' ?>"><?= money($v, false) ?></td>
           <?php elseif ($type === 'int'):  ?> <td class="num"><?= $v === null ? '—' : e($v) ?></td>
           <?php elseif ($type === 'date'): ?> <td class="dt"><?= $v ? e(date('d M Y', strtotime($v))) : '—' ?></td>
+          <?php elseif ($type === 'datetime'): ?> <td class="dt"><?= $v ? e(date('d M Y H:i', strtotime($v))) : '—' ?></td>
           <?php elseif ($type === 'pct'):  ?> <td><?= isset($r['achievement']) && $r['achievement'] !== null ? pct_bar((float)$r['achievement']) : '<span class="bdg dim">no target</span>' ?></td>
           <?php elseif ($type === 'percent'): ?> <td class="num"><?= $v === null || $v === '' ? '—' : number_format((float)$v, 1) . '%' ?></td>
           <?php else: ?> <td class="celltext"><?= $v === null || $v === '' ? '—' : e($v) ?></td>
           <?php endif; ?>
         <?php endforeach; ?>
         <td class="ops">
+          <?php if ($module === 'quotations'): ?>
+            <a class="btn tiny primary" href="index.php?page=quote_builder&id=<?= (int)($r['id'] ?? 0) ?>">Build</a>
+            <?php if (!empty($r['public_token'])): ?>
+              <a class="btn tiny ghost" target="_blank" rel="noopener"
+                 href="<?= e(absolute_url('page=proposal&token=' . urlencode((string)$r['public_token']))) ?>">Proposal</a>
+            <?php endif; ?>
+          <?php endif; ?>
+          <?php if ($module === 'task_templates' && (int)($r['active'] ?? 0) === 1): ?>
+            <a class="btn tiny primary" href="index.php?page=followups&action=form&template_id=<?= (int)($r['id'] ?? 0) ?>">Use</a>
+          <?php endif; ?>
           <a class="btn tiny" href="index.php?page=<?= e($module) ?>&action=form&id=<?= (int)($r['id'] ?? 0) ?>">Edit</a>
           <?php if (in_array(Auth::role(), ['admin', 'manager'], true)): ?>
           <form method="post" action="index.php?page=<?= e($module) ?>&action=delete&id=<?= (int)($r['id'] ?? 0) ?>" class="inline"

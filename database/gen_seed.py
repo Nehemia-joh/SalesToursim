@@ -339,6 +339,8 @@ out.append("TRUNCATE users; TRUNCATE list_items; TRUNCATE fx_rates; TRUNCATE set
 out.append("TRUNCATE clients; TRUNCATE inquiries; TRUNCATE opportunities; TRUNCATE quotations;")
 out.append("TRUNCATE follow_ups; TRUNCATE bookings; TRUNCATE payment_schedule; TRUNCATE payments;")
 out.append("TRUNCATE sales_targets; TRUNCATE activities;")
+out.append("TRUNCATE quote_days; TRUNCATE quote_items; TRUNCATE quote_views;")
+out.append("TRUNCATE travelers; TRUNCATE content_library; TRUNCATE message_templates; TRUNCATE task_templates;")
 out.append("")
 
 # users (1=admin, 2..5 team)

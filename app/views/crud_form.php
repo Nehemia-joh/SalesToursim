@@ -43,6 +43,8 @@
             <input type="number" step="0.01" name="<?= e($name) ?>" value="<?= $val === null ? '' : e((string)$val) ?>"<?= $reqAttr ?>>
           <?php elseif ($type === 'textarea'): ?>
             <textarea name="<?= e($name) ?>" rows="3"<?= $reqAttr ?>><?= e((string)$val) ?></textarea>
+          <?php elseif ($type === 'bool'): ?>
+            <label class="chk"><input type="checkbox" name="<?= e($name) ?>" value="1" <?= (int)$val === 1 ? 'checked' : '' ?>> Yes</label>
           <?php elseif ($type === 'currency'): ?>
             <select name="<?= e($name) ?>"<?= $reqAttr ?>>
               <?php foreach (crud_options('currency') as $c): ?>

@@ -162,6 +162,17 @@ function dashboard_index(): void
          WHERE status IN ('Sent','Revised') AND valid_until BETWEEN ? AND ?",
         [$today, $next7]
     );
+    $kpi['proposal_views_7d'] = (int)DB::val(
+        "SELECT COUNT(*) FROM quote_views WHERE viewed_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)"
+    );
+    $kpi['quotes_opened_7d'] = (int)DB::val(
+        "SELECT COUNT(DISTINCT quotation_id) FROM quote_views WHERE viewed_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)"
+    );
+    $kpi['quotes_awaiting'] = (int)DB::val(
+        "SELECT COUNT(*) FROM quotations
+         WHERE status IN ('Sent','Revised')
+           AND (client_response IS NULL OR client_response = '')"
+    );
 
     $kpi['month_revenue'] = (float)DB::val(
         "SELECT COALESCE(ROUND(SUM(b.actual_revenue * COALESCE(fx.rate_to_base,1)),0),0)
@@ -257,6 +268,35 @@ function dashboard_index(): void
          WHERE q.status IN ('Sent','Revised') AND q.valid_until BETWEEN ? AND ?
          ORDER BY q.valid_until",
         [$today, $next7]
+    );
+
+    /* ---------- running and upcoming tours ---------- */
+    $todos['running_tours'] = DB::all(
+        "SELECT CONCAT('BK-',LPAD(b.id,3,'0')) bk_code, b.tour, b.arrival, b.departure,
+                b.pax, b.status, c.name AS client_name, u.name AS sp_name,
+                (SELECT COUNT(*) FROM travelers t WHERE t.booking_id = b.id) AS traveler_count,
+                GREATEST(0, DATEDIFF(b.departure, CURDATE())) AS days_left
+         FROM bookings b
+         LEFT JOIN clients c ON c.id = b.client_id
+         LEFT JOIN users   u ON u.id = b.salesperson
+         WHERE b.status NOT IN ('Cancelled','Completed')
+           AND b.arrival IS NOT NULL AND b.departure IS NOT NULL
+           AND b.arrival <= CURDATE() AND b.departure >= CURDATE()
+         ORDER BY b.departure, b.id"
+    );
+    $todos['upcoming_tours'] = DB::all(
+        "SELECT CONCAT('BK-',LPAD(b.id,3,'0')) bk_code, b.tour, b.arrival, b.departure,
+                b.pax, b.status, c.name AS client_name, u.name AS sp_name,
+                (SELECT COUNT(*) FROM travelers t WHERE t.booking_id = b.id) AS traveler_count,
+                DATEDIFF(b.arrival, CURDATE()) AS days_to_arrival
+         FROM bookings b
+         LEFT JOIN clients c ON c.id = b.client_id
+         LEFT JOIN users   u ON u.id = b.salesperson
+         WHERE b.status NOT IN ('Cancelled','Completed')
+           AND b.arrival IS NOT NULL
+           AND b.arrival > CURDATE()
+           AND b.arrival <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+         ORDER BY b.arrival, b.id"
     );
 
     /* ---------- funnel in the Excel stage order ---------- */
