@@ -19,7 +19,7 @@ function code_of(string $prefix, $id): string
     return $id === null ? '' : $prefix . '-' . str_pad((string)(int)$id, 3, '0', STR_PAD_LEFT);
 }
 
-/** base currency from .env (default USD) */
+/** base currency from .envWebVersion (default USD) */
 function base_currency(): string
 {
     return strtoupper(Env::get('BASE_CURRENCY', 'USD'));

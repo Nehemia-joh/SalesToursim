@@ -1,5 +1,5 @@
 <?php
-/** DB.php - PDO singleton connected through the .envSalesTourism credentials. */
+/** DB.php - PDO singleton connected through the .envWebVersion credentials. */
 final class DB
 {
     /** @var PDO|null */
@@ -18,7 +18,7 @@ final class DB
 
         if ($name === '') {
             http_response_code(500);
-            exit('DB_NAME is missing in .envSalesTourism');
+            exit('DB_NAME is missing in .envWebVersion');
         }
 
         $dsn = "mysql:host={$dsn_host};port={$dsn_port};dbname={$name};charset={$charset}";
@@ -31,7 +31,7 @@ final class DB
         } catch (PDOException $e) {
             http_response_code(500);
             error_log('DB connect failed: ' . $e->getMessage());
-            exit('Database connection failed - check the credentials in .envSalesTourism');
+            exit('Database connection failed - check the credentials in .envWebVersion');
         }
         return self::$pdo;
     }

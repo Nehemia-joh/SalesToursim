@@ -1,9 +1,9 @@
 # =====================================================================
 #  Michael Tourism Sales System - Web Version
-#  Copy this file one level above WebVersion and name it .env:
+#  Copy this file one level above WebVersion and name it .envWebVersion:
 #
 #      michaeltourism/
-#        .env
+#        .envWebVersion
 #        WebVersion/
 #
 #  Then fill in the real database credentials.

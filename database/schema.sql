@@ -2,7 +2,7 @@
 --  Michael Tourism Sales System - Web Version
 --  Database schema (MySQL 5.7+ / MariaDB 10.3+)
 --  Import order:
---    1) create the database named in your .envSalesTourism (DB_NAME)
+--    1) create the database named in your .envWebVersion (DB_NAME)
 --         mysql -u USER -p -e "CREATE DATABASE your_db_name CHARACTER SET utf8mb4"
 --    2) mysql -u USER -p your_db_name < schema.sql
 --    3) mysql -u USER -p your_db_name < seed.sql   (demo data, optional)
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `list_items` (
   UNIQUE KEY `uq_list_value` (`list_name`, `value`)
 ) ENGINE=InnoDB;
 
--- ---------- currency conversion (base currency from .env) ----------
+-- ---------- currency conversion (base currency from .envWebVersion) ----------
 CREATE TABLE IF NOT EXISTS `fx_rates` (
   `currency`     CHAR(3) PRIMARY KEY,
   `rate_to_base` DECIMAL(14,8) NOT NULL,

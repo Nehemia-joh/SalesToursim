@@ -1,6 +1,6 @@
 -- ============================================================
 --  demo seed data (Aug-Oct 2026) - generated from the Excel demo
---  Import AFTER schema.sql into the DB named in .envSalesTourism.
+--  Import AFTER schema.sql into the DB named in .envWebVersion.
 -- ============================================================
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE users; TRUNCATE list_items; TRUNCATE fx_rates; TRUNCATE settings;

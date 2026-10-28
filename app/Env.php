@@ -3,9 +3,11 @@
  * Env.php - tiny stand-alone .env loader (no composer required).
  *
  * Search order (first match wins):
- *   1. <one level above WebVersion>/.envSalesTourism   <- the file you filled in
- *   2. <one level above WebVersion>/.env
- *   3. WebVersion/.env
+ *   1. <one level above WebVersion>/.envWebVersion   <- canonical file
+ *   2. <one level above WebVersion>/.envSalesTourism <- legacy
+ *   3. <one level above WebVersion>/.env             <- legacy
+ *   4. WebVersion/.envWebVersion
+ *   5. WebVersion/.env                               <- legacy
  */
 final class Env
 {
@@ -20,8 +22,10 @@ final class Env
         self::$loaded = true;
 
         $candidates = [
+            dirname(__DIR__, 2) . '/.envWebVersion',
             dirname(__DIR__, 2) . '/.envSalesTourism',
             dirname(__DIR__, 2) . '/.env',
+            dirname(__DIR__) . '/.envWebVersion',
             dirname(__DIR__) . '/.env',
         ];
 

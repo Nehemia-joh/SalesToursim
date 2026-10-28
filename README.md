@@ -21,7 +21,7 @@ Check quickly: `php -m | grep pdo_mysql`
 The app reads its credentials from the file **one level above this folder**:
 
 ```
-/home/nehemia/Documents/MichaelTourism/.envSalesTourism      (or .env)
+/home/nehemia/Documents/MichaelTourism/.envWebVersion
 ```
 
 Required keys:
@@ -36,7 +36,7 @@ BASE_CURRENCY=USD
 APP_KEY=any-long-random-string
 ```
 
-> The loader checks `.envSalesTourism` first, then `.env`, then `WebVersion/.env`.
+> The loader checks `.envWebVersion` first; legacy `.envSalesTourism` / `.env` names are still supported.
 
 ## 3. Create the database and import the schema
 
@@ -64,8 +64,8 @@ The Git repository root is this `WebVersion` folder. `.cpanel.yml` deploys:
 
 ```
 $HOME/michaeltourism/
-  .env                         <- create manually (NOT in Git)
-  .env.example                 <- deployed from the repository
+  .envWebVersion                <- create manually (NOT in Git)
+  .envWebVersion.example        <- deployed from the repository
   WebVersion/
     app/                       <- private application code
     public/                    <- domain document root
@@ -83,7 +83,7 @@ git remote add origin https://github.com/YOUR-USER/YOUR-REPO.git
 git push -u origin main
 ```
 
-`.env` is ignored by `.gitignore`; never commit it.
+`.envWebVersion` is ignored by `.gitignore`; never commit it.
 
 #### 2. Create the database in cPanel
 
@@ -95,17 +95,17 @@ git push -u origin main
 
 If you import only `schema.sql`, run `database/create_admin.sql` next (change the email and password in that file first) so you can log in.
 
-#### 3. Create `.env` on the server
+#### 3. Create `.envWebVersion` on the server
 
 Use cPanel **File Manager** (or **Terminal**):
 
 ```bash
 mkdir -p ~/michaeltourism
-cp ~/repositories/YOUR-REPO/.env.example ~/michaeltourism/.env
-chmod 600 ~/michaeltourism/.env
+cp ~/repositories/YOUR-REPO/.envWebVersion.example ~/michaeltourism/.envWebVersion
+chmod 600 ~/michaeltourism/.envWebVersion
 ```
 
-Edit `~/michaeltourism/.env` and fill in the real values:
+Edit `~/michaeltourism/.envWebVersion` and fill in the real values:
 
 ```ini
 APP_TIMEZONE=Africa/Dar_es_Salaam
@@ -136,7 +136,7 @@ After creating the repository:
 2. Click **Update from Remote**.
 3. Click **Deploy HEAD Commit**.
 
-`.cpanel.yml` copies `app/`, `public/`, `database/`, `README.md`, and `.env.example` into `~/michaeltourism/WebVersion`.
+`.cpanel.yml` copies `app/`, `public/`, `database/`, `README.md`, and `.envWebVersion.example` into `~/michaeltourism/WebVersion`.
 
 #### 5. Point the domain at `public`
 
@@ -157,7 +157,7 @@ If you imported `seed.sql`, log in with `admin@michaeltourism.com` / `demo1234`,
 #### Troubleshooting
 
 - **Deployment fails:** check that `app/` exists at the repository root; `.cpanel.yml` expects the repo root to be `WebVersion`.
-- **500 error:** check `~/michaeltourism/.env` and the cPanel PHP error log.
+- **500 error:** check `~/michaeltourism/.envWebVersion` and the cPanel PHP error log.
 - **Blank page:** ensure PHP 8.1+ and the `pdo_mysql` extension are enabled.
 - **Wrong folder:** update `DEPLOYPATH` and `ENVPATH` at the top of `.cpanel.yml`.
 
@@ -177,7 +177,7 @@ If you imported `seed.sql`, log in with `admin@michaeltourism.com` / `demo1234`,
 |---------------------------|---------|
 | `public/index.php`        | Front controller (all URLs go through it) |
 | `public/assets/style.css` | Styling |
-| `app/Env.php`             | Reads `.envSalesTourism` |
+| `app/Env.php`             | Reads `.envWebVersion` (legacy names supported) |
 | `app/DB.php`              | PDO helpers |
 | `app/Auth.php`            | Login/session (sha256 salt+hash) |
 | `app/modules.php`         | Module definitions (drives all list/add/edit screens) |

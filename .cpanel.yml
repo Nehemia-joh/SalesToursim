@@ -5,8 +5,8 @@
 # Server layout (mirrors the local project):
 #
 #   $HOME/michaeltourism/
-#     .env                       <- create manually once (NOT in Git)
-#     .env.example               <- copied from this repo
+#     .envWebVersion              <- create manually once (NOT in Git)
+#     .envWebVersion.example      <- copied from this repo
 #     WebVersion/
 #       app/                     <- private application code
 #       public/                  <- web root
@@ -15,7 +15,7 @@
 # In cPanel, point the domain/subdomain document root at:
 #   $HOME/michaeltourism/WebVersion/public
 #
-# The real .env is deliberately never copied or overwritten by deployment.
+# The real .envWebVersion is deliberately never copied or overwritten by deployment.
 # ----------------------------------------------------------------------
 deployment:
   tasks:
@@ -38,11 +38,11 @@ deployment:
 
     # Documentation and environment template
     - /bin/sh -c 'if [ "$REPOPATH" != "$DEPLOYPATH" ]; then /bin/cp "$REPOPATH/README.md" "$DEPLOYPATH/"; fi'
-    - /bin/cp "$REPOPATH/.env.example" "$ENVPATH/.env.example"
+    - /bin/cp "$REPOPATH/.envWebVersion.example" "$ENVPATH/.envWebVersion.example"
 
-    # Permissions: normal files 644, directories 755, real .env 600
+    # Permissions: normal files 644, directories 755, real .envWebVersion 600
     - /bin/find "$DEPLOYPATH/app" "$DEPLOYPATH/public" "$DEPLOYPATH/database" -type f -exec /bin/chmod 644 {} \;
     - /bin/find "$DEPLOYPATH/app" "$DEPLOYPATH/public" "$DEPLOYPATH/database" -type d -exec /bin/chmod 755 {} \;
     - /bin/chmod 644 "$DEPLOYPATH/README.md" 2>/dev/null || true
-    - /bin/chmod 644 "$ENVPATH/.env.example" 2>/dev/null || true
-    - /bin/chmod 600 "$ENVPATH/.env" 2>/dev/null || true
+    - /bin/chmod 644 "$ENVPATH/.envWebVersion.example" 2>/dev/null || true
+    - /bin/chmod 600 "$ENVPATH/.envWebVersion" 2>/dev/null || true
