@@ -361,6 +361,7 @@ th.ops,td.ops{text-align:right;white-space:nowrap}
 
 /* ---------- alert tiles ---------- */
 .alerts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:9px 0 14px}
+.alerts.three{grid-template-columns:repeat(3,minmax(0,1fr))}
 .alertbox{
   border:1px solid var(--line);
   border-left:3px solid var(--accent);
@@ -373,6 +374,33 @@ th.ops,td.ops{text-align:right;white-space:nowrap}
 }
 .alertbox b{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--dim)}
 .alertbox span{font-size:15px;font-weight:750;font-variant-numeric:tabular-nums}
+
+/* ---------- compact dashboard accordions ---------- */
+details.acc{border-top:1px solid var(--line-soft);border-bottom:0;padding:0}
+details.acc:first-of-type{border-top:0}
+details.acc > summary{
+  list-style:none;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 0;
+  font-size:13px;
+  font-weight:700;
+  color:var(--txt);
+}
+details.acc > summary::-webkit-details-marker{display:none}
+details.acc > summary::after{content:'▾';color:var(--dim);font-size:11px;transition:transform .15s}
+details.acc[open] > summary::after{transform:rotate(180deg)}
+details.acc > summary .cnt{font-weight:600;color:var(--dim);font-size:11.5px}
+details.acc > summary .acc-h{font-size:18px;font-weight:750;letter-spacing:-.02em;color:var(--txt)}
+details.acc > .accbody{padding:0 0 8px}
+.action-center details.acc .tablewrap{max-height:320px;overflow:auto}
+details.acc > .accbody > h3:first-child,
+details.acc > .accbody > .tablewrap:first-child{margin-top:0}
+.dash-more{display:flex;justify-content:flex-end;margin-top:8px;font-size:12px}
+.dash-more a{color:var(--accent);font-weight:700;text-decoration:none}
 .alertbox.bad{background:#FFF7F6;border-color:#FECDCA;border-left-color:var(--bad)}
 .alertbox.warn{background:#FFFBF0;border-color:#FDE68A;border-left-color:var(--warn)}
 
@@ -550,7 +578,7 @@ summary{cursor:pointer;padding:7px 0;font-weight:600}
   .kpi .v{font-size:21px}
 }
 @media(max-width:700px){
-  .alerts{grid-template-columns:1fr}
+  .alerts,.alerts.three{grid-template-columns:1fr}
 }
 @media(max-width:600px){
   .fgrid{grid-template-columns:1fr}
@@ -561,6 +589,11 @@ summary{cursor:pointer;padding:7px 0;font-weight:600}
   .searchform input{min-width:0}
 }
 @media(max-width:520px){
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpi .v{font-size:19px}
+  .kpi .s{font-size:11px}
+}
+@media(max-width:360px){
   .cards{grid-template-columns:1fr}
 }
 /* ---------- quote builder ---------- */
