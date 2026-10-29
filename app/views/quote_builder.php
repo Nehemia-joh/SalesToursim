@@ -6,6 +6,10 @@ $cur       = $q['currency'] ?: base_currency();
 $dayIndex  = count($days);
 $itemIndex = count($items);
 $categories = ['Accommodation', 'Park fees', 'Transport', 'Activity', 'Meal', 'Guide', 'Flight', 'Other'];
+$draftKey   = draft_key_quote((int)$q['id']);
+$draftRoute = draft_route_quote((int)$q['id']);
+$draftLabel = 'Proposal ' . $quoteCode;
+$draftMeta  = $draftMeta ?? null;
 ?>
 <div class="topbar">
   <div>
@@ -15,11 +19,11 @@ $categories = ['Accommodation', 'Park fees', 'Transport', 'Activity', 'Meal', 'G
     </div>
   </div>
   <div class="tools">
-    <a class="btn ghost" href="index.php?page=quotations">← Quotations</a>
+    <a class="btn ghost" href="<?= e(url('page=quotations')) ?>">← Quotations</a>
     <?php if ($publicUrl): ?>
       <a class="btn ghost" target="_blank" rel="noopener" href="<?= e($publicUrl) ?>">Preview proposal</a>
     <?php endif; ?>
-    <a class="btn ghost" href="index.php?page=quotations&action=form&id=<?= (int)$q['id'] ?>">Edit record</a>
+    <a class="btn ghost" href="<?= e(url('page=quotations&action=form&id=' . (int)$q['id'])) ?>">Edit record</a>
   </div>
 </div>
 
@@ -40,9 +44,22 @@ $categories = ['Accommodation', 'Park fees', 'Transport', 'Activity', 'Meal', 'G
   </div>
 <?php endif; ?>
 
-<form method="post" action="index.php?page=quote_builder_save">
+<form method="post" action="<?= e(url('page=quote_builder_save&id=' . (int)$q['id'])) ?>"
+      data-draft-key="<?= e($draftKey) ?>" data-draft-route="<?= e($draftRoute) ?>"
+      data-draft-label="<?= e($draftLabel) ?>">
   <?= csrf_field() ?>
   <input type="hidden" name="id" value="<?= (int)$q['id'] ?>">
+
+  <?php if (!empty($draftMeta)): ?>
+    <div class="draft-banner" data-draft-banner>
+      <div>
+        <b>Partial save restored</b>
+        <span>Saved <?= e(date('d M Y H:i', strtotime((string)$draftMeta['updated_at']))) ?>.
+          Keep editing, or discard it and start from the saved proposal.</span>
+      </div>
+      <button type="button" class="btn tiny ghost" data-draft-discard>Discard partial save</button>
+    </div>
+  <?php endif; ?>
 
   <div class="card form">
     <h2>Proposal header</h2>
@@ -117,7 +134,7 @@ $categories = ['Accommodation', 'Park fees', 'Transport', 'Activity', 'Meal', 'G
         <h2>Content library</h2>
         <p class="hint">Insert a saved inclusion, exclusion, term or cover note into the proposal.</p>
       </div>
-      <a class="btn ghost" href="index.php?page=content_library" target="_blank" rel="noopener">Manage content</a>
+      <a class="btn ghost" href="<?= e(url('page=content_library')) ?>" target="_blank" rel="noopener">Manage content</a>
     </div>
     <?php if ($contentBlocks): ?>
       <div class="content-insert">
@@ -133,7 +150,7 @@ $categories = ['Accommodation', 'Park fees', 'Transport', 'Activity', 'Meal', 'G
         <button type="button" class="btn ghost" data-insert="terms">Terms</button>
       </div>
     <?php else: ?>
-      <p class="empty-note">No saved content yet. <a href="index.php?page=content_library&action=form">Add your first content block</a>.</p>
+      <p class="empty-note">No saved content yet. <a href="<?= e(url('page=content_library&action=form')) ?>">Add your first content block</a>.</p>
     <?php endif; ?>
   </div>
 
@@ -227,7 +244,9 @@ $categories = ['Accommodation', 'Park fees', 'Transport', 'Activity', 'Meal', 'G
 
   <div class="formfoot">
     <button class="btn primary" type="submit">Save proposal</button>
-    <a class="btn ghost" href="index.php?page=quotations">Cancel</a>
+    <button class="btn ghost" type="button" data-draft-save>Save partial</button>
+    <a class="btn ghost" href="<?= e(url('page=quotations')) ?>">Cancel</a>
+    <span class="draft-status" data-draft-status></span>
   </div>
 </form>
 
@@ -237,7 +256,7 @@ $categories = ['Accommodation', 'Park fees', 'Transport', 'Activity', 'Meal', 'G
       <h2>Client message</h2>
       <p class="hint">Pick a saved message template, personalise it with this quote, then copy it into email or WhatsApp.</p>
     </div>
-    <a class="btn ghost" href="index.php?page=message_templates" target="_blank" rel="noopener">Manage templates</a>
+    <a class="btn ghost" href="<?= e(url('page=message_templates')) ?>" target="_blank" rel="noopener">Manage templates</a>
   </div>
   <?php if ($messages): ?>
     <div class="content-insert">
@@ -253,7 +272,7 @@ $categories = ['Accommodation', 'Park fees', 'Transport', 'Activity', 'Meal', 'G
     </div>
     <textarea id="message-preview" rows="7" readonly placeholder="Choose a template to preview the message here."></textarea>
   <?php else: ?>
-    <p class="empty-note">No message templates yet. <a href="index.php?page=message_templates&action=form">Add your first template</a>.</p>
+    <p class="empty-note">No message templates yet. <a href="<?= e(url('page=message_templates&action=form')) ?>">Add your first template</a>.</p>
   <?php endif; ?>
 </div>
 
@@ -271,14 +290,14 @@ $categories = ['Accommodation', 'Park fees', 'Transport', 'Activity', 'Meal', 'G
       <div class="alertbox"><b>Last viewed</b><span><?= $lastView ? e(date('d M Y H:i', strtotime($lastView))) : 'Not yet' ?></span></div>
       <div class="alertbox"><b>Link status</b><span><?= (int)($q['public_enabled'] ?? 1) === 1 ? 'Active' : 'Disabled' ?></span></div>
     </div>
-    <form method="post" action="index.php?page=quote_reset_link" onsubmit="return confirm('Generate a new link? The old link will stop working.');">
+    <form method="post" action="<?= e(url('page=quote_reset_link&id=' . (int)$q['id'])) ?>" onsubmit="return confirm('Generate a new link? The old link will stop working.');">
       <?= csrf_field() ?>
       <input type="hidden" name="id" value="<?= (int)$q['id'] ?>">
       <button class="btn ghost" type="submit">Reset public link</button>
     </form>
   <?php else: ?>
     <p class="hint">Generate a secure, no-login link so the client can read the itinerary and accept or request changes online.</p>
-    <form method="post" action="index.php?page=quote_share">
+    <form method="post" action="<?= e(url('page=quote_share&id=' . (int)$q['id'])) ?>">
       <?= csrf_field() ?>
       <input type="hidden" name="id" value="<?= (int)$q['id'] ?>">
       <button class="btn primary" type="submit">Generate public link</button>

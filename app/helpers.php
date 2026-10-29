@@ -1,23 +1,150 @@
 <?php
 /** helpers.php - escaping, money/currency, flash, csrf, badges, url helpers. */
 
-/** current URL query builder */
-function url(string $query): string
+/** Path where the app is mounted (empty string at the domain root). */
+function base_path(): string
 {
-    return 'index.php?' . $query;
+    static $base = null;
+    if ($base !== null) return $base;
+
+    // Most reliable: compare the public folder with the web server document root.
+    $docRoot = realpath((string)($_SERVER['DOCUMENT_ROOT'] ?? ''));
+    $public  = realpath(dirname(__DIR__) . '/public');
+    if ($docRoot !== false && $docRoot !== '/' && $public !== false && str_starts_with($public, $docRoot)) {
+        $rel = substr($public, strlen($docRoot));
+        return $base = rtrim(str_replace('\\', '/', $rel), '/');
+    }
+
+    // Fallback for unusual server setups.
+    $script = str_replace('\\', '/', (string)($_SERVER['SCRIPT_NAME'] ?? ''));
+    $dir    = rtrim(str_replace('\\', '/', dirname($script)), '/');
+    if ($dir === '.' || $dir === '/') $dir = '';
+    return $base = $dir;
 }
 
-/** absolute URL for public proposal links (uses APP_URL when configured) */
+/** Convert a legacy query string (page=...&action=...) into a clean path. */
+function route_path(string $query): string
+{
+    parse_str($query, $q);
+
+    $page   = preg_replace('/[^a-z_]/', '', strtolower((string)($q['page'] ?? 'dashboard'))) ?: 'dashboard';
+    $action = (string)($q['action'] ?? '');
+    $id     = (int)($q['id'] ?? 0);
+    $edit   = (int)($q['edit'] ?? 0);
+    $token  = (string)($q['token'] ?? '');
+
+    $consumed = ['page' => true, 'action' => true, 'id' => true, 'edit' => true, 'token' => true];
+    $extra    = array_diff_key($q, $consumed);
+
+    switch ($page) {
+        case 'dashboard':
+            $path = '/';
+            break;
+        case 'login':
+            $path = '/login';
+            break;
+        case 'logout':
+            $path = '/logout';
+            break;
+        case 'reports':
+        case 'help':
+        case 'settings':
+            $path = '/' . $page;
+            break;
+        case 'users':
+            $path = $edit > 0 ? '/users/' . $edit . '/edit' : '/users';
+            break;
+        case 'quote_builder':
+            $path = $id > 0 ? '/quotations/' . $id . '/build' : '/quotations';
+            break;
+        case 'quote_builder_save':
+            $path = $id > 0 ? '/quotations/' . $id . '/build/save' : '/quotations/build/save';
+            break;
+        case 'quote_share':
+            $path = $id > 0 ? '/quotations/' . $id . '/share' : '/quotations/share';
+            break;
+        case 'quote_reset_link':
+            $path = $id > 0 ? '/quotations/' . $id . '/reset-link' : '/quotations/reset-link';
+            break;
+        case 'proposal':
+            $path = '/proposal' . ($token !== '' ? '/' . rawurlencode($token) : '');
+            break;
+        case 'proposal_respond':
+            $path = '/proposal' . ($token !== '' ? '/' . rawurlencode($token) : '') . '/respond';
+            break;
+        case 'add_list_item':
+            $path = '/settings/lists/add';
+            break;
+        case 'delete_list_item':
+            $path = '/settings/lists/delete';
+            break;
+        case 'save_fx':
+            $path = '/settings/fx';
+            break;
+        case 'save_company':
+            $path = '/settings/company';
+            break;
+        case 'save_user':
+            $path = '/users/save';
+            break;
+        case 'delete_user':
+            $path = '/users/delete';
+            break;
+        case 'draft_save':
+            $path = '/drafts/save';
+            break;
+        case 'draft_discard':
+            $path = '/drafts/discard';
+            break;
+        default:
+            $slug = str_replace('_', '-', $page);
+            $path = '/' . $slug;
+            if ($action === 'form') {
+                $path .= $id > 0 ? '/' . $id . '/edit' : '/new';
+            } elseif ($action === 'save') {
+                $path .= '/save';
+            } elseif ($action === 'delete') {
+                $path .= $id > 0 ? '/' . $id . '/delete' : '/delete';
+            }
+            break;
+    }
+
+    $qs = $extra ? '?' . http_build_query($extra) : '';
+    return $path . $qs;
+}
+
+/** Build an app URL from a legacy query string. */
+function url(string $query): string
+{
+    return base_path() . route_path($query);
+}
+
+/** Absolute URL for public proposal links (uses APP_URL when configured). */
 function absolute_url(string $query): string
 {
     $base = rtrim(Env::get('APP_URL', ''), '/');
     if ($base === '') {
         $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
         $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $dir    = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/');
-        $base   = $scheme . '://' . $host . ($dir === '/' ? '' : $dir);
+        $base   = $scheme . '://' . $host . base_path();
     }
-    return $base . '/index.php?' . $query;
+    return $base . route_path($query);
+}
+
+/** URL for a static asset, safe on nested clean routes. */
+function asset_url(string $path): string
+{
+    return base_path() . '/assets/' . ltrim($path, '/');
+}
+
+/** Redirect to a local path, preserving the app's base path when supplied. */
+function redirect_path(string $path): void
+{
+    $path = str_replace(["\r", "\n"], '', $path);
+    if ($path === '') $path = '/';
+    if ($path[0] !== '/') $path = '/' . $path;
+    header('Location: ' . $path);
+    exit;
 }
 
 /** read one key from the settings table, with a fallback */
@@ -93,8 +220,7 @@ function take_flashes(): array
 /* ---------- redirect ---------- */
 function redirect(string $query): void
 {
-    header('Location: index.php?' . $query);
-    exit;
+    redirect_path(url($query));
 }
 
 /* ---------- CSRF ---------- */

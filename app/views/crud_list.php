@@ -2,13 +2,12 @@
 <div class="topbar">
   <h1><?= e($m['title']) ?></h1>
   <div class="tools">
-    <form method="get" class="searchform">
-      <input type="hidden" name="page" value="<?= e($module) ?>">
+    <form method="get" class="searchform" action="<?= e(url('page=' . $module)) ?>">
       <input type="search" name="q" value="<?= e($q) ?>" placeholder="Search records...">
       <button class="btn ghost" type="submit">Search</button>
-      <?php if ($q !== ''): ?><a class="btn ghost" href="index.php?page=<?= e($module) ?>">Clear</a><?php endif; ?>
+      <?php if ($q !== ''): ?><a class="btn ghost" href="<?= e(url('page=' . $module)) ?>">Clear</a><?php endif; ?>
     </form>
-    <a class="btn primary" href="index.php?page=<?= e($module) ?>&action=form">+ New</a>
+    <a class="btn primary" href="<?= e(url('page=' . $module . '&action=form')) ?>">+ New</a>
   </div>
 </div>
 
@@ -36,18 +35,18 @@
         <?php endforeach; ?>
         <td class="ops">
           <?php if ($module === 'quotations'): ?>
-            <a class="btn tiny primary" href="index.php?page=quote_builder&id=<?= (int)($r['id'] ?? 0) ?>">Build</a>
+            <a class="btn tiny primary" href="<?= e(url('page=quote_builder&id=' . (int)($r['id'] ?? 0))) ?>">Build</a>
             <?php if (!empty($r['public_token'])): ?>
               <a class="btn tiny ghost" target="_blank" rel="noopener"
                  href="<?= e(absolute_url('page=proposal&token=' . urlencode((string)$r['public_token']))) ?>">Proposal</a>
             <?php endif; ?>
           <?php endif; ?>
           <?php if ($module === 'task_templates' && (int)($r['active'] ?? 0) === 1): ?>
-            <a class="btn tiny primary" href="index.php?page=followups&action=form&template_id=<?= (int)($r['id'] ?? 0) ?>">Use</a>
+            <a class="btn tiny primary" href="<?= e(url('page=followups&action=form&template_id=' . (int)($r['id'] ?? 0))) ?>">Use</a>
           <?php endif; ?>
-          <a class="btn tiny" href="index.php?page=<?= e($module) ?>&action=form&id=<?= (int)($r['id'] ?? 0) ?>">Edit</a>
+          <a class="btn tiny" href="<?= e(url('page=' . $module . '&action=form&id=' . (int)($r['id'] ?? 0))) ?>">Edit</a>
           <?php if (in_array(Auth::role(), ['admin', 'manager'], true)): ?>
-          <form method="post" action="index.php?page=<?= e($module) ?>&action=delete&id=<?= (int)($r['id'] ?? 0) ?>" class="inline"
+          <form method="post" action="<?= e(url('page=' . $module . '&action=delete&id=' . (int)($r['id'] ?? 0))) ?>" class="inline"
                 onsubmit="return confirm('Delete this record? This cannot be undone.');"><?= csrf_field() ?>
             <button class="btn tiny danger" type="submit">Del</button></form>
           <?php endif; ?>

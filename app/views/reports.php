@@ -7,7 +7,7 @@ $title = 'Reports';
     <div class="hint">The full Excel report pack. All figures in <?= e($base_cur) ?>.</div>
   </div>
   <div class="tools">
-    <a class="btn ghost" href="index.php?page=dashboard">← Dashboard</a>
+    <a class="btn ghost" href="<?= e(url('page=dashboard')) ?>">← Dashboard</a>
   </div>
 </div>
 

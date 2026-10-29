@@ -1,10 +1,15 @@
 <?php
 /**
- * index.php - single front controller for the Michael Tourism Sales Manager (web).
- * URL pattern:  index.php?page=bookings&action=form&id=3
+ * index.php - application front controller for the Michael Tourism Sales Manager.
  *
- * Run locally:   php -S localhost:8000 -t <path-to-WebVersion>/public
- * (all assets are public/, the app core lives in WebVersion/app — outside the web root)
+ * Clean URLs are handled by public/router.php and public/.htaccess:
+ *   /clients, /clients/new, /clients/5/edit, /quotations/5/build, /proposal/<token>
+ *
+ * The legacy query-string URLs still work for bookmarks and old links:
+ *   index.php?page=bookings&action=form&id=3
+ *
+ * Run locally:
+ *   php -S localhost:8000 -t <path-to-WebVersion>/public <path-to-WebVersion>/public/router.php
  */
 
 declare(strict_types=1);
@@ -15,8 +20,10 @@ require_once APP_PATH . '/Env.php';
 require_once APP_PATH . '/DB.php';
 require_once APP_PATH . '/Auth.php';
 require_once APP_PATH . '/helpers.php';
+require_once APP_PATH . '/drafts.php';
 require_once APP_PATH . '/modules.php';
 require_once APP_PATH . '/controllers/crud.php';
+require_once APP_PATH . '/controllers/drafts.php';
 require_once APP_PATH . '/controllers/dashboard.php';
 require_once APP_PATH . '/controllers/reports.php';
 require_once APP_PATH . '/controllers/settings.php';
@@ -42,16 +49,48 @@ function view(string $name, array $data = [], bool $bare = false): void
     require APP_PATH . '/views/layout.php';
 }
 
-$page = preg_replace('/[^a-z_]/', '', strtolower($_GET['page'] ?? 'dashboard')) ?: 'dashboard';
+$page = str_replace('-', '_', strtolower((string)($_GET['page'] ?? 'dashboard')));
+$page = preg_replace('/[^a-z_]/', '', $page) ?: 'dashboard';
+
+/* Reject unknown clean URLs instead of treating every slug as a module. */
+$knownPages = [
+    'dashboard', 'reports', 'help', 'settings', 'users',
+    'login', 'logout', 'proposal', 'proposal_respond', '__not_found',
+    'add_list_item', 'delete_list_item', 'save_fx', 'save_company',
+    'save_user', 'delete_user', 'draft_save', 'draft_discard',
+    'quote_builder', 'quote_builder_save', 'quote_share', 'quote_reset_link',
+];
+if (!in_array($page, $knownPages, true) && !module_config($page)) {
+    $page = '__not_found';
+}
 
 /* ---------- routes that work without login ---------- */
+if ($page === '__not_found') {
+    http_response_code(404);
+    view('not_found', ['title' => 'Page not found'], true);
+    exit;
+}
+
 if ($page === 'login') {
     $err = null;
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         csrf_check($_POST);
         $err = Auth::login($_POST['email'] ?? '', $_POST['password'] ?? '');
-        if ($err === null) redirect('page=dashboard');
+        if ($err === null) {
+            $draft = draft_latest(Auth::id());
+            if ($draft) redirect_path(draft_resume_url($draft));
+            redirect('page=dashboard');
+        }
+    } else {
+        // Already signed in? Do not show the login form again.
+        if (Auth::user()) {
+            $draft = draft_latest(Auth::id());
+            if ($draft) redirect_path(draft_resume_url($draft));
+            redirect('page=dashboard');
+        }
     }
+
     view('login', ['err' => $err], true);
     exit;
 }
@@ -87,6 +126,9 @@ switch ($page) {
     case 'delete_list_item':  settings_delete_list_item(); break;
     case 'save_user':         users_save();          break;
     case 'delete_user':       users_delete();        break;
+
+    case 'draft_save':        draft_save_endpoint();    break;
+    case 'draft_discard':     draft_discard_endpoint(); break;
 
     case 'quote_builder':     quote_builder((int)($_GET['id'] ?? 0));   break;
     case 'quote_builder_save': quote_builder_save((int)($_POST['id'] ?? 0)); break;

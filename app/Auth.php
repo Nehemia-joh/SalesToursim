@@ -5,6 +5,17 @@ final class Auth
     public static function start(): void
     {
         if (session_status() === PHP_SESSION_ACTIVE) return;
+
+        // Keep signed-in sessions usable for a full working day. The browser
+        // cookie itself still expires when the browser is closed.
+        ini_set('session.gc_maxlifetime', '28800');
+        session_set_cookie_params([
+            'lifetime' => 0,
+            'path'     => '/',
+            'secure'   => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
         session_name('SALESTOURISM');
         session_start();
     }

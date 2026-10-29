@@ -60,6 +60,61 @@ function quote_builder(int $id): void
     $contentBlocks = DB::all("SELECT id, title, category, body FROM content_library WHERE active = 1 ORDER BY category, title");
     $messages      = DB::all("SELECT id, name, channel, subject, body FROM message_templates WHERE active = 1 ORDER BY channel, name");
 
+    /* Restore unsaved builder work saved by the partial-save helper. */
+    $draftMeta = draft_get(Auth::id(), draft_key_quote($id));
+    if ($draftMeta) {
+        $p = draft_payload_array((string)$draftMeta['payload']);
+
+        foreach (['tour', 'status', 'quote_date', 'valid_until', 'version', 'pax',
+                  'currency', 'amount', 'cover_note', 'inclusions', 'exclusions', 'terms'] as $field) {
+            if (array_key_exists($field, $p)) $q[$field] = $p[$field];
+        }
+        $q['public_enabled'] = !empty($p['public_enabled']) ? 1 : 0;
+        if (($q['pax'] ?? '') === '') $q['pax'] = null;
+        if (($q['version'] ?? '') === '') $q['version'] = 1;
+
+        if (isset($p['days']) && is_array($p['days'])) {
+            $days = [];
+            foreach ($p['days'] as $i => $d) {
+                if (!is_array($d)) continue;
+                $days[] = [
+                    'day_no'        => (int)($d['day_no'] ?? 0) ?: ((int)$i + 1),
+                    'title'         => (string)($d['title'] ?? ''),
+                    'description'   => (string)($d['description'] ?? ''),
+                    'accommodation' => (string)($d['accommodation'] ?? ''),
+                    'meals'         => (string)($d['meals'] ?? ''),
+                    'notes'         => (string)($d['notes'] ?? ''),
+                    'sort'          => (int)$i,
+                ];
+            }
+        }
+
+        if (isset($p['items']) && is_array($p['items'])) {
+            $items = [];
+            $baseTotal = 0.0;
+            foreach ($p['items'] as $i => $it) {
+                if (!is_array($it)) continue;
+                $qty   = (float)($it['qty'] ?? 1);
+                $price = (float)str_replace([',', ' '], '', (string)($it['unit_price'] ?? '0'));
+                if ($qty <= 0) $qty = 1;
+                $total    = round($qty * $price, 2);
+                $optional = !empty($it['optional']) ? 1 : 0;
+                $items[] = [
+                    'category'    => (string)($it['category'] ?? ''),
+                    'description' => (string)($it['description'] ?? ''),
+                    'qty'         => $qty,
+                    'unit'        => (string)($it['unit'] ?? ''),
+                    'unit_price'  => round($price, 2),
+                    'total'       => $total,
+                    'optional'    => $optional,
+                    'sort'        => (int)$i,
+                ];
+                if (!$optional) $baseTotal += $total;
+            }
+            if ($items) $q['amount'] = round($baseTotal, 2);
+        }
+    }
+
     view('quote_builder', [
         'title'         => 'Quote builder: ' . code_of('QT', $id),
         'q'             => $q,
@@ -70,6 +125,7 @@ function quote_builder(int $id): void
         'publicUrl'     => $publicUrl,
         'contentBlocks' => $contentBlocks,
         'messages'      => $messages,
+        'draftMeta'     => $draftMeta,
     ]);
 }
 
@@ -197,6 +253,7 @@ function quote_builder_save(int $id): void
         }
 
         $pdo->commit();
+        draft_clear(Auth::id(), draft_key_quote($id));
         flash('ok', 'Proposal saved.');
     } catch (Throwable $e) {
         if ($pdo->inTransaction()) $pdo->rollBack();

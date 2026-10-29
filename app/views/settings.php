@@ -1,7 +1,7 @@
 <?php /** settings.php - lists + fx + company */
 $title = 'Settings';
 ?>
-<div class="topbar"><h1>Settings</h1><a class="btn ghost" href="index.php?page=users">Manage users</a></div>
+<div class="topbar"><h1>Settings</h1><a class="btn ghost" href="<?= e(url('page=users')) ?>">Manage users</a></div>
 
 <div class="two">
   <div class="card">
@@ -14,7 +14,7 @@ $title = 'Settings';
           <tbody>
           <?php foreach ($items as $it): ?>
             <tr><td><?= e($it['value']) ?></td>
-              <td class="ops"><form class="inline" method="post" action="index.php?page=delete_list_item">
+              <td class="ops"><form class="inline" method="post" action="<?= e(url('page=delete_list_item')) ?>">
                 <?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$it['id'] ?>">
                 <button class="btn tiny danger" type="submit">×</button></form></td></tr>
           <?php endforeach; ?>
@@ -22,7 +22,7 @@ $title = 'Settings';
         </table>
       </details>
     <?php endforeach; ?>
-    <form class="addform" method="post" action="index.php?page=add_list_item">
+    <form class="addform" method="post" action="<?= e(url('page=add_list_item')) ?>">
       <input type="hidden" name="_list" value="1"><?= csrf_field() ?>
       <div class="fgrid">
         <div class="field"><label>List name</label>
@@ -41,7 +41,7 @@ $title = 'Settings';
   <div class="card">
     <h2>Currency conversion (rate to base)</h2>
     <p class="hint">1 unit of the currency = this many <?= e($base_cur) ?>. Salespeople use these to normalise mixed-currency money.</p>
-    <form method="post" action="index.php?page=save_fx">
+    <form method="post" action="<?= e(url('page=save_fx')) ?>">
       <?= csrf_field() ?>
       <table class="grid small">
         <thead><tr><th>Currency</th><th>Rate to <?= e($base_cur) ?></th><th>Updated</th></tr></thead>
@@ -71,7 +71,7 @@ $title = 'Settings';
       <?php if (!$company): ?><tr><td colspan="2" class="empty">No company settings in the DB yet.</td></tr><?php endif; ?>
       </tbody>
     </table>
-    <form method="post" action="index.php?page=save_company">
+    <form method="post" action="<?= e(url('page=save_company')) ?>">
       <?= csrf_field() ?>
       <div class="fgrid">
         <div class="field"><label>Key (e.g. company_name)</label><input type="text" name="k" required></div>

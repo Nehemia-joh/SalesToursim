@@ -1,0 +1,17 @@
+# Michael Tourism - clean URLs
+# Apache / LiteSpeed sends every request that is not a real file or folder
+# through router.php. The legacy index.php?page=... URLs still work.
+
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Serve real files (assets, index.php, favicon, etc.) directly.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Everything else is a clean application route.
+  RewriteRule ^ router.php [L,QSA]
+</IfModule>

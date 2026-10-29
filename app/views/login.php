@@ -28,7 +28,7 @@ $title = 'Sign in';
 
       <?php if ($err): ?><div class="fl bad"><?= e($err) ?></div><?php endif; ?>
 
-      <form method="post" action="index.php?page=login">
+      <form method="post" action="<?= e(url('page=login')) ?>">
         <?= csrf_field() ?>
         <div class="field">
           <label>Email</label>

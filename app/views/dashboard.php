@@ -15,18 +15,18 @@ $openAction = $todos['overdue_fu'] ? 'fu'
   </div>
   <div class="tools">
     <span class="date-stamp"><?= date('d M Y') ?></span>
-    <a class="btn primary" href="index.php?page=inquiries&action=form">+ New inquiry</a>
+    <a class="btn primary" href="<?= e(url('page=inquiries&action=form')) ?>">+ New inquiry</a>
   </div>
 </div>
 
 <div class="flow flow-7">
-  <a href="index.php?page=inquiries&action=form"><b>1</b><span>New inquiry</span></a>
-  <a href="index.php?page=pipeline&action=form"><b>2</b><span>Pipeline</span></a>
-  <a href="index.php?page=quotations&action=form"><b>3</b><span>Quotation</span></a>
-  <a href="index.php?page=followups&action=form"><b>4</b><span>Follow-up</span></a>
-  <a href="index.php?page=bookings&action=form"><b>5</b><span>Booking</span></a>
-  <a href="index.php?page=schedule&action=form"><b>6</b><span>Payment plan</span></a>
-  <a href="index.php?page=payments&action=form"><b>7</b><span>Payment received</span></a>
+  <a href="<?= e(url('page=inquiries&action=form')) ?>"><b>1</b><span>New inquiry</span></a>
+  <a href="<?= e(url('page=pipeline&action=form')) ?>"><b>2</b><span>Pipeline</span></a>
+  <a href="<?= e(url('page=quotations&action=form')) ?>"><b>3</b><span>Quotation</span></a>
+  <a href="<?= e(url('page=followups&action=form')) ?>"><b>4</b><span>Follow-up</span></a>
+  <a href="<?= e(url('page=bookings&action=form')) ?>"><b>5</b><span>Booking</span></a>
+  <a href="<?= e(url('page=schedule&action=form')) ?>"><b>6</b><span>Payment plan</span></a>
+  <a href="<?= e(url('page=payments&action=form')) ?>"><b>7</b><span>Payment received</span></a>
 </div>
 
 <div class="cards">
@@ -85,7 +85,7 @@ $openAction = $todos['overdue_fu'] ? 'fu'
           </tbody>
         </table>
         </div>
-        <div class="dash-more"><a href="index.php?page=followups">Open follow-ups</a></div>
+        <div class="dash-more"><a href="<?= e(url('page=followups')) ?>">Open follow-ups</a></div>
       </div>
     </details>
 
@@ -104,7 +104,7 @@ $openAction = $todos['overdue_fu'] ? 'fu'
           </tbody>
         </table>
         </div>
-        <div class="dash-more"><a href="index.php?page=followups">Open follow-ups</a></div>
+        <div class="dash-more"><a href="<?= e(url('page=followups')) ?>">Open follow-ups</a></div>
       </div>
     </details>
 
@@ -146,7 +146,7 @@ $openAction = $todos['overdue_fu'] ? 'fu'
           </tbody>
         </table>
         </div>
-        <div class="dash-more"><a href="index.php?page=schedule">Open payment schedule</a></div>
+        <div class="dash-more"><a href="<?= e(url('page=schedule')) ?>">Open payment schedule</a></div>
       </div>
     </details>
 
@@ -165,7 +165,7 @@ $openAction = $todos['overdue_fu'] ? 'fu'
           </tbody>
         </table>
         </div>
-        <div class="dash-more"><a href="index.php?page=bookings">Open bookings</a></div>
+        <div class="dash-more"><a href="<?= e(url('page=bookings')) ?>">Open bookings</a></div>
       </div>
     </details>
 
@@ -184,7 +184,7 @@ $openAction = $todos['overdue_fu'] ? 'fu'
           </tbody>
         </table>
         </div>
-        <div class="dash-more"><a href="index.php?page=quotations">Open quotations</a></div>
+        <div class="dash-more"><a href="<?= e(url('page=quotations')) ?>">Open quotations</a></div>
       </div>
     </details>
   </div>
@@ -257,8 +257,8 @@ $openAction = $todos['overdue_fu'] ? 'fu'
       <p class="hint" style="margin:4px 0 0">Tours on the road now, plus departures in the next 7 days. Showing up to 4 in each list.</p>
     </div>
     <div class="tools">
-      <a class="btn ghost" href="index.php?page=bookings">All bookings</a>
-      <a class="btn ghost" href="index.php?page=travelers">Travelers</a>
+      <a class="btn ghost" href="<?= e(url('page=bookings')) ?>">All bookings</a>
+      <a class="btn ghost" href="<?= e(url('page=travelers')) ?>">Travelers</a>
     </div>
   </div>
 
@@ -284,7 +284,7 @@ $openAction = $todos['overdue_fu'] ? 'fu'
       </table>
       </div>
       <?php if (count($todos['running_tours']) > 4): ?>
-        <div class="dash-more"><a href="index.php?page=bookings">View all <?= count($todos['running_tours']) ?> running tours</a></div>
+        <div class="dash-more"><a href="<?= e(url('page=bookings')) ?>">View all <?= count($todos['running_tours']) ?> running tours</a></div>
       <?php endif; ?>
     </div>
 
@@ -309,7 +309,7 @@ $openAction = $todos['overdue_fu'] ? 'fu'
       </table>
       </div>
       <?php if (count($todos['upcoming_tours']) > 4): ?>
-        <div class="dash-more"><a href="index.php?page=bookings">View all <?= count($todos['upcoming_tours']) ?> upcoming tours</a></div>
+        <div class="dash-more"><a href="<?= e(url('page=bookings')) ?>">View all <?= count($todos['upcoming_tours']) ?> upcoming tours</a></div>
       <?php endif; ?>
     </div>
   </div>

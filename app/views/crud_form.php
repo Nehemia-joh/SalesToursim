@@ -7,16 +7,33 @@ $nouns = [
 ];
 $noun = $nouns[$m['prefix']] ?? 'record';
 $heading = $id ? 'Edit ' . $noun . ' (' . code_of($m['prefix'], $id) . ')' : 'New ' . $noun;
+$draftKey   = $draftKey ?? draft_key_crud($module, (int)$id);
+$draftRoute = $draftRoute ?? draft_route_crud($module, (int)$id);
+$draftLabel = $draftLabel ?? draft_label_crud($m, (int)$id);
+$draftMeta  = $draftMeta ?? null;
 ?>
 <div class="topbar">
   <h1><?= e($heading) ?></h1>
-  <a class="btn ghost" href="index.php?page=<?= e($module) ?>">← Back to list</a>
+  <a class="btn ghost" href="<?= e(url('page=' . $module)) ?>">← Back to list</a>
 </div>
 
 <div class="card form">
-  <form method="post" action="index.php?page=<?= e($module) ?>&action=save">
+  <form method="post" action="<?= e(url('page=' . $module . '&action=save')) ?>"
+        data-draft-key="<?= e($draftKey) ?>" data-draft-route="<?= e($draftRoute) ?>"
+        data-draft-label="<?= e($draftLabel) ?>">
     <?= csrf_field() ?>
     <input type="hidden" name="id" value="<?= (int)$id ?>">
+
+    <?php if (!empty($draftMeta)): ?>
+      <div class="draft-banner" data-draft-banner>
+        <div>
+          <b>Partial save restored</b>
+          <span>Saved <?= e(date('d M Y H:i', strtotime((string)$draftMeta['updated_at']))) ?>.
+            Keep editing, or discard it and start from the saved record.</span>
+        </div>
+        <button type="button" class="btn tiny ghost" data-draft-discard>Discard partial save</button>
+      </div>
+    <?php endif; ?>
     <div class="fgrid">
       <?php foreach ($m['fields'] as $f):
             [$name, $label, $type] = $f;
@@ -100,7 +117,9 @@ $heading = $id ? 'Edit ' . $noun . ' (' . code_of($m['prefix'], $id) . ')' : 'Ne
     </div>
     <div class="formfoot">
       <button class="btn primary" type="submit"><?= $id ? 'Save changes' : 'Add record' ?></button>
-      <a class="btn ghost" href="index.php?page=<?= e($module) ?>">Cancel</a>
+      <button class="btn ghost" type="button" data-draft-save>Save partial</button>
+      <a class="btn ghost" href="<?= e(url('page=' . $module)) ?>">Cancel</a>
+      <span class="draft-status" data-draft-status></span>
     </div>
   </form>
 </div>

@@ -54,7 +54,13 @@ If the database was created from the original schema (before the proposal/travel
 mysql -u USER -p my_db_name < database/phase1_quotes_travelers.sql
 ```
 
-Fresh installs do **not** need the migration: `schema.sql` already contains the new columns and tables.
+If the database already existed before partial saves were added, also run Phase 2 once:
+
+```bash
+mysql -u USER -p my_db_name < database/phase2_partial_saves.sql
+```
+
+Fresh installs do **not** need either migration: `schema.sql` already contains the new columns, tables and `partial_saves`.
 
 `seed.sql` re-creates the same demo dataset used in the Excel workbook
 (Aug–Oct 2026, 45 inquiries, 20 bookings, $248,800 booking value,
@@ -63,10 +69,32 @@ $206,900 actual revenue, $294,762.50 weighted pipeline, etc.).
 ## 4. Run
 
 ```bash
-php -S localhost:8000 -t /path/to/WebVersion/public
+php -S localhost:8000 -t /path/to/WebVersion/public /path/to/WebVersion/public/router.php
 ```
 
-Then open <http://localhost:8000>.
+Then open <http://localhost:8000>. The router gives clean URLs:
+
+```
+/                    dashboard
+/clients             client list
+/clients/new         new client
+/clients/5/edit      edit client 5
+/quotations/5/build  quote builder
+/proposal/<token>    public proposal
+```
+
+The old `index.php?page=...` URLs still work, so bookmarks do not break. On
+Apache/LiteSpeed the included `public/.htaccess` rewrites non-file requests to
+`public/router.php`.
+
+### Partial saves
+
+Long forms (all module records and the quote builder) autosave unsaved work as a
+partial save. The draft is kept per user and restored after the next sign-in, so
+a user can sign out and continue where they stopped. Use the **Save partial**
+button to save immediately, or **Discard partial save** to start from the saved
+record. Drafts are removed automatically after a successful save and expire
+after 30 days.
 
 ### Deploy from GitHub to cPanel (live)
 
@@ -102,6 +130,7 @@ git push -u origin main
 4. Open **phpMyAdmin**, select the database, then run/import `database/schema.sql`.
 5. Optional: run/import `database/seed.sql` to load the demo data and demo login.
 6. If this database already existed before the quote-builder upgrade, do **not** re-import `schema.sql`; import `database/phase1_quotes_travelers.sql` once instead.
+7. For an existing database that predates partial saves, also import `database/phase2_partial_saves.sql` once.
 
 If you import only `schema.sql`, run `database/create_admin.sql` next (change the email and password in that file first) so you can log in.
 
@@ -199,6 +228,7 @@ If you imported `seed.sql`, log in with `admin@michaeltourism.com` / `demo1234`,
 | `app/views/proposal.php`  | Client-facing public proposal and print/PDF layout |
 | `database/schema.sql`     | All tables (fresh install) |
 | `database/phase1_quotes_travelers.sql` | Upgrade script for existing databases |
+| `database/phase2_partial_saves.sql` | Adds the partial-save table to existing databases |
 | `database/gen_seed.py`    | Regenerates `seed.sql` (needs Python 3) |
 
 ## 6. Modules (mirror of the Excel sheets)

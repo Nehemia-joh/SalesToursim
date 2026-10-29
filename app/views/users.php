@@ -15,7 +15,7 @@ $title = 'Users';
         <td><?= badge(ucfirst($r['role'])) ?></td>
         <td><?= badge($r['active'] ? 'Active' : 'Inactive') ?></td>
         <td class="dt"><?= e(date('d M Y', strtotime($r['created_at']))) ?></td>
-        <td class="ops"><a class="btn tiny" href="index.php?page=users&edit=<?= (int)$r['id'] ?>#user-form">Edit below</a></td>
+        <td class="ops"><a class="btn tiny" href="<?= e(url('page=users&edit=' . (int)$r['id'])) ?>#user-form">Edit below</a></td>
       </tr>
     <?php endforeach; ?>
     </tbody>
@@ -26,8 +26,8 @@ $title = 'Users';
 <?php $eu = $u ?? null; ?>
 <div class="card form" id="user-form">
   <h2><?= $eu ? 'Edit ' . e($eu['name']) : 'Add a user' ?></h2>
-  <?php if ($eu): ?><p class="hint">Editing an existing account. <a href="index.php?page=users">Cancel</a>.</p><?php endif; ?>
-  <form method="post" action="index.php?page=save_user">
+  <?php if ($eu): ?><p class="hint">Editing an existing account. <a href="<?= e(url('page=users')) ?>">Cancel</a>.</p><?php endif; ?>
+  <form method="post" action="<?= e(url('page=save_user')) ?>">
     <?= csrf_field() ?>
     <input type="hidden" name="id" value="<?= (int)($eu['id'] ?? 0) ?>">
     <div class="fgrid">

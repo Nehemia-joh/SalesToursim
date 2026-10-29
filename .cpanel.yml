@@ -36,7 +36,7 @@ deployment:
     - /bin/sh -c 'if [ "$REPOPATH" != "$DEPLOYPATH" ]; then /bin/cp -R "$REPOPATH/app" "$DEPLOYPATH/"; /bin/cp -R "$REPOPATH/public" "$DEPLOYPATH/"; else echo "Repository is already at the deploy path; app/public are in place."; fi'
 
     # Database schema, demo seed, first-admin helper and upgrade migration
-    - /bin/sh -c 'if [ "$REPOPATH" != "$DEPLOYPATH" ]; then /bin/cp "$REPOPATH/database/schema.sql" "$DEPLOYPATH/database/"; /bin/cp "$REPOPATH/database/seed.sql" "$DEPLOYPATH/database/"; /bin/cp "$REPOPATH/database/create_admin.sql" "$DEPLOYPATH/database/"; /bin/cp "$REPOPATH/database/phase1_quotes_travelers.sql" "$DEPLOYPATH/database/"; fi'
+    - /bin/sh -c 'if [ "$REPOPATH" != "$DEPLOYPATH" ]; then /bin/cp "$REPOPATH/database/schema.sql" "$DEPLOYPATH/database/"; /bin/cp "$REPOPATH/database/seed.sql" "$DEPLOYPATH/database/"; /bin/cp "$REPOPATH/database/create_admin.sql" "$DEPLOYPATH/database/"; /bin/cp "$REPOPATH/database/phase1_quotes_travelers.sql" "$DEPLOYPATH/database/"; /bin/cp "$REPOPATH/database/phase2_partial_saves.sql" "$DEPLOYPATH/database/"; fi'
 
     # Documentation and environment template
     - /bin/sh -c 'if [ "$REPOPATH" != "$DEPLOYPATH" ]; then /bin/cp "$REPOPATH/README.md" "$DEPLOYPATH/"; fi'

@@ -157,7 +157,7 @@ $quoteDate  = $q['quote_date'] ? date('d M Y', strtotime($q['quote_date'])) : da
     <section class="proposal-actions no-print">
       <h2>Ready to go?</h2>
       <p class="hint">Accept this proposal or tell us what you would like changed. We will reply personally.</p>
-      <form method="post" action="index.php?page=proposal_respond">
+      <form method="post" action="<?= e(url('page=proposal_respond&token=' . $token)) ?>">
         <input type="hidden" name="token" value="<?= e($token) ?>">
         <div class="field">
           <label>Questions or requested changes (optional)</label>

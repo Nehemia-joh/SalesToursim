@@ -7,19 +7,19 @@ $title = 'How to use';
     <div class="hint">Enter data in this order — every later screen fills itself from the earlier one.</div>
   </div>
   <div class="tools">
-    <a class="btn primary" href="index.php?page=inquiries&action=form">+ Start a new inquiry</a>
+    <a class="btn primary" href="<?= e(url('page=inquiries&action=form')) ?>">+ Start a new inquiry</a>
   </div>
 </div>
 
 <div class="flow flow-8">
-  <a href="index.php?page=clients"><b>1</b><span>Client</span></a>
-  <a href="index.php?page=inquiries&action=form"><b>2</b><span>Inquiry</span></a>
-  <a href="index.php?page=pipeline&action=form"><b>3</b><span>Pipeline</span></a>
-  <a href="index.php?page=quotations&action=form"><b>4</b><span>Quotation</span></a>
-  <a href="index.php?page=followups&action=form"><b>5</b><span>Follow-up</span></a>
-  <a href="index.php?page=bookings&action=form"><b>6</b><span>Booking</span></a>
-  <a href="index.php?page=schedule&action=form"><b>7</b><span>Payment plan</span></a>
-  <a href="index.php?page=payments&action=form"><b>8</b><span>Payment</span></a>
+  <a href="<?= e(url('page=clients')) ?>"><b>1</b><span>Client</span></a>
+  <a href="<?= e(url('page=inquiries&action=form')) ?>"><b>2</b><span>Inquiry</span></a>
+  <a href="<?= e(url('page=pipeline&action=form')) ?>"><b>3</b><span>Pipeline</span></a>
+  <a href="<?= e(url('page=quotations&action=form')) ?>"><b>4</b><span>Quotation</span></a>
+  <a href="<?= e(url('page=followups&action=form')) ?>"><b>5</b><span>Follow-up</span></a>
+  <a href="<?= e(url('page=bookings&action=form')) ?>"><b>6</b><span>Booking</span></a>
+  <a href="<?= e(url('page=schedule&action=form')) ?>"><b>7</b><span>Payment plan</span></a>
+  <a href="<?= e(url('page=payments&action=form')) ?>"><b>8</b><span>Payment</span></a>
 </div>
 
 <div class="two">
@@ -157,7 +157,7 @@ $title = 'How to use';
     <div>
       <h3>Every day</h3>
       <ul>
-        <li>Open the <a href="index.php?page=dashboard">Dashboard</a> and clear the red follow-ups.</li>
+        <li>Open the <a href="<?= e(url('page=dashboard')) ?>">Dashboard</a> and clear the red follow-ups.</li>
         <li>Log new inquiries the moment they arrive.</li>
         <li>Record payments on the day the money lands.</li>
         <li>Move pipeline stages and probabilities forward.</li>
@@ -166,10 +166,10 @@ $title = 'How to use';
     <div>
       <h3>Every week</h3>
       <ul>
-        <li>Review <a href="index.php?page=followups">Follow-Ups</a> and the “due this week” list.</li>
+        <li>Review <a href="<?= e(url('page=followups')) ?>">Follow-Ups</a> and the “due this week” list.</li>
         <li>Chase overdue invoices and expiring quotes.</li>
         <li>Confirm or release tentative bookings.</li>
-        <li>Review <a href="index.php?page=reports">Reports</a> with the team and update targets.</li>
+        <li>Review <a href="<?= e(url('page=reports')) ?>">Reports</a> with the team and update targets.</li>
       </ul>
     </div>
   </div>

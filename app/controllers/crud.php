@@ -193,6 +193,26 @@ function crud_form(string $module, int $id = 0): void
     unset($_SESSION['form_old']);
     if ($old !== null) $row = $old;
 
+    // Restore the user's last partial save for this form (unless a fresher
+    // validation bounce is already being shown).
+    $draftMeta = null;
+    if ($old === null) {
+        $draftMeta = draft_get(Auth::id(), draft_key_crud($module, $id));
+        if ($draftMeta) {
+            $payload = draft_payload_array((string)$draftMeta['payload']);
+            if (!is_array($row)) $row = [];
+            foreach ($m['fields'] as $f) {
+                $name = (string)$f[0];
+                $type = (string)($f[2] ?? '');
+                if (array_key_exists($name, $payload)) {
+                    $row[$name] = $payload[$name];
+                } elseif ($type === 'bool') {
+                    $row[$name] = 0;
+                }
+            }
+        }
+    }
+
     // "Use" on a task template opens a follow-up form pre-filled with its task.
     if ($id === 0 && $module === 'followups' && !empty($_GET['template_id'])) {
         $tpl = DB::one('SELECT * FROM task_templates WHERE id = ? AND active = 1', [(int)$_GET['template_id']]);
@@ -205,7 +225,16 @@ function crud_form(string $module, int $id = 0): void
         }
     }
 
-    view('crud_form', ['m' => $m, 'module' => $module, 'row' => $row, 'id' => $id]);
+    view('crud_form', [
+        'm'          => $m,
+        'module'     => $module,
+        'row'        => $row,
+        'id'         => $id,
+        'draftMeta'  => $draftMeta,
+        'draftKey'   => draft_key_crud($module, $id),
+        'draftRoute' => draft_route_crud($module, $id),
+        'draftLabel' => draft_label_crud($m, $id),
+    ]);
 }
 
 /** cast one posted value according to its field type */
@@ -228,7 +257,8 @@ function crud_save(string $module): void
     csrf_check($_POST);
     Auth::check();
 
-    $id    = (int)($_POST['id'] ?? 0);
+    $id         = (int)($_POST['id'] ?? 0);
+    $originalId = $id;
 
     // allow a new client to be created inline from the inquiry form
     crud_prepare_post($module);
@@ -279,6 +309,11 @@ function crud_save(string $module): void
         flash('ok', $m['title'] . ' added as ' . code_of($m['prefix'], $newId) . '.');
         $id = $newId;
     }
+
+    // The record is saved, so the partial draft is no longer needed.
+    draft_clear(Auth::id(), draft_key_crud($module, $originalId));
+    if ($id !== $originalId) draft_clear(Auth::id(), draft_key_crud($module, $id));
+
     redirect('page=' . $module);
 }
 
@@ -288,7 +323,10 @@ function crud_delete(string $module, int $id): void
     if (!$m) { http_response_code(404); exit('Unknown module'); }
     Auth::manager();
     csrf_check(array_merge($_POST, ['_csrf' => $_POST['_csrf'] ?? ($_GET['_csrf'] ?? '')]));
-    if ($id > 0) DB::run('DELETE FROM ' . $m['table'] . ' WHERE id = ?', [$id]);
+    if ($id > 0) {
+        DB::run('DELETE FROM ' . $m['table'] . ' WHERE id = ?', [$id]);
+        draft_clear(Auth::id(), draft_key_crud($module, $id));
+    }
     flash('ok', 'Record deleted.');
     redirect('page=' . $module);
 }

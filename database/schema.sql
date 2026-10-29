@@ -326,4 +326,19 @@ CREATE TABLE IF NOT EXISTS `activities` (
   KEY `idx_inquiry` (`inquiry_id`), KEY `idx_date` (`activity_date`)
 ) ENGINE=InnoDB;
 
+-- ---------- partial saves (unsaved form work, resumed after sign-in) ----------
+CREATE TABLE IF NOT EXISTS `partial_saves` (
+  `id`         INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id`    INT NOT NULL,
+  `draft_key`  VARCHAR(190) NOT NULL,
+  `route`      VARCHAR(255) NOT NULL,
+  `label`      VARCHAR(190) NOT NULL DEFAULT '',
+  `payload`    MEDIUMTEXT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `uq_user_draft` (`user_id`, `draft_key`),
+  KEY `idx_user_updated` (`user_id`, `updated_at`),
+  CONSTRAINT `fk_partial_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 SET FOREIGN_KEY_CHECKS = 1;

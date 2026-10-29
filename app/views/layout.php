@@ -1,13 +1,18 @@
 <?php /** layout.php - HTML shell used by every view. */
+$isBare = !empty($bare);
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= e($title ?? 'Sales desk') ?> - Michael Tourism</title>
-<link rel="stylesheet" href="assets/style.css">
+<?php if (!$isBare): ?><meta name="csrf-token" content="<?= e(csrf_token()) ?>"><?php endif; ?>
+<link rel="stylesheet" href="<?= e(asset_url('style.css')) ?>">
+<?php if (!$isBare): ?><script src="<?= e(asset_url('app.js')) ?>" defer></script><?php endif; ?>
 </head>
-<body class="<?= !empty($bare) ? 'bare' : '' ?>">
+<body class="<?= $isBare ? 'bare' : '' ?>"
+      <?php if (!$isBare): ?>data-draft-save-url="<?= e(url('page=draft_save')) ?>"
+      data-draft-discard-url="<?= e(url('page=draft_discard')) ?>"<?php endif; ?>>
 <?php if (!empty($bare)): ?>
   <?= $content ?>
 <?php else: ?>
@@ -18,7 +23,7 @@
       <div class="brandtext"><b>Michael Tourism</b><span>Sales desk, Arusha</span></div>
     </div>
     <nav aria-label="Main navigation">
-      <a href="index.php?page=dashboard" <?= ($page ?? '') === 'dashboard' ? 'class="on"' : '' ?>>Dashboard</a>
+      <a href="<?= e(url('page=dashboard')) ?>" <?= ($page ?? '') === 'dashboard' ? 'class="on"' : '' ?>>Dashboard</a>
       <?php
         $groups = [
           'Sales pipeline' => [
@@ -50,7 +55,7 @@
         foreach ($groups as $label => $items): ?>
           <div class="navgrp"><?= e($label) ?></div>
           <?php foreach ($items as [$p, $txt]): ?>
-            <a href="index.php?page=<?= $p ?>" <?= ($page ?? '') === $p ? 'class="on"' : '' ?>><?= e($txt) ?></a>
+            <a href="<?= e(url('page=' . $p)) ?>" <?= ($page ?? '') === $p ? 'class="on"' : '' ?>><?= e($txt) ?></a>
           <?php endforeach; ?>
         <?php endforeach; ?>
     </nav>
@@ -64,8 +69,8 @@
         </div>
       </div>
       <div class="me-links">
-        <a href="index.php?page=users">Users</a>
-        <a href="index.php?page=logout">Sign out</a>
+        <a href="<?= e(url('page=users')) ?>">Users</a>
+        <a href="<?= e(url('page=logout')) ?>" data-draft-flush>Sign out</a>
       </div>
     </div>
   </aside>

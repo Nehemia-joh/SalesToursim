@@ -612,7 +612,29 @@ textarea{min-height:84px;resize:vertical}
 }
 .field.span2{grid-column:span 3}
 .field .hint{margin-top:5px}
-.formfoot{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+.formfoot{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.draft-banner{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin:0 0 18px;
+  padding:12px 14px;
+  border:1px solid #E5D19B;
+  border-left:3px solid var(--saffron);
+  border-radius:var(--radius);
+  background:var(--saffron-soft);
+  color:var(--ink);
+}
+.draft-banner b{display:block;font-size:12.5px;margin-bottom:3px}
+.draft-banner span{display:block;color:var(--ink-2);font-size:12px;line-height:1.45}
+.draft-banner .btn{flex:none}
+.draft-status{font-size:11.5px;color:var(--muted);margin-left:2px}
+.draft-status.ok{color:var(--ok)}
+.draft-status.bad{color:var(--bad)}
+@media(max-width:600px){
+  .draft-banner{flex-direction:column}
+}
 .chk,.chk input{font-weight:600}
 .addform{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
 .hint{color:var(--muted);font-size:12.5px}
